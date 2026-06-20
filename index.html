@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador IRF 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            background-color: #0d1117;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('Fondo.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .contenedor-principal {
+            display: flex;
+            gap: 40px;
+            background-color: rgba(22, 27, 34, 0.85); 
+            backdrop-filter: blur(10px); 
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid rgba(48, 54, 61, 0.5);
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .area-preview { flex: 1; display: flex; justify-content: center; }
+
+        .lienzo-credencial {
+            position: relative;
+            width: 400px; 
+            height: 400px;
+            background-color: #000000;
+            overflow: hidden;
+        }
+
+        .fondo-canva {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Foto ajustada a etiqueta real <img> para no perder resolución */
+        .foto-perfil-render {
+            position: absolute;
+            top: 80px;    
+            left: 119px;    
+            width: 162px;  
+            height: 162px; 
+            object-fit: cover;
+            background-color: #21262d;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .textos-render {
+            position: absolute;
+            top: 260px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px; 
+            z-index: 3;
+            font-family: 'Georgia', serif; 
+        }
+
+        .textos-render h2 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: normal;
+        }
+
+        .textos-render p {
+            margin: 0;
+            font-size: 14px;
+            color: white;
+        }
+
+        .texto-amarillo {
+            color: #f7c02b;
+        }
+
+        .area-formulario {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px; 
+            font-family: 'Montserrat', sans-serif; 
+        }
+        
+        .area-formulario h2 {
+            margin: 0; 
+            font-weight: 700;
+        }
+        
+        .subtitulo-form {
+            margin: 0 0 10px 0; 
+            color: #b1bac4; 
+            font-size: 14px;
+        }
+
+        .form-grupo { display: flex; flex-direction: column; gap: 8px; }
+        
+        .form-grupo label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #e6edf3;
+        }
+
+        input[type="text"], input[type="file"] {
+            background-color: rgba(13, 17, 23, 0.8);
+            border: 1px solid #30363d;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif; 
+        }
+
+        .btn-generar {
+            background-color: #f7c02b;
+            color: #0d1117; 
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s, transform 0.1s;
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 4px 15px rgba(247, 192, 43, 0.2);
+        }
+        .btn-generar:hover { 
+            background-color: #e5b124; 
+            transform: translateY(-2px);
+        }
+        .btn-generar:disabled { background-color: #7a6119; color: #444; cursor: not-allowed; transform: none; box-shadow: none;}
+        
+        .logo-irf {
+            height: 60px; 
+            max-width: 250px; 
+            object-fit: contain;
+            margin-bottom: 10px; 
+            align-self: flex-start;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor-principal">
+        
+        <div class="area-preview">
+            <div class="lienzo-credencial" id="credencial-final">
+                <img src="base.jpg" class="fondo-canva" alt="Fondo Base">
+                
+                <!-- Etiqueta IMG real para no perder calidad -->
+                <img class="foto-perfil-render" id="render-foto" alt="">
+                
+                <div class="textos-render">
+                    <h2 id="render-nombre" class="texto-amarillo">Nombre Apellido</h2>
+                    <p>#El talento nace en <span id="render-region-span" class="texto-amarillo">Región</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="area-formulario">
+            <img src="logo.png" class="logo-irf" alt="Logo SpinOut" onerror="this.style.display='none'">
+            
+            <h2>Becario IRF26,</h2>
+            <p class="subtitulo-form">Sube tu foto y representa a tu región.</p>
+
+            <div class="form-grupo">
+                <label>Nombre y Apellido</label>
+                <input type="text" id="input-nombre" placeholder="Ej. Nombre Apellido" oninput="actualizarTexto('input-nombre', 'render-nombre', 'Nombre Apellido')">
+            </div>
+
+            <div class="form-grupo">
+                <label>Región</label>
+                <input type="text" id="input-region" placeholder="Ej. Región" oninput="actualizarTexto('input-region', 'render-region-span', 'Región')">
+            </div>
+
+            <div class="form-grupo">
+                <label>Foto de Perfil</label>
+                <input type="file" id="input-foto" accept="image/*" onchange="cargarFoto(event)">
+            </div>
+
+            <button class="btn-generar" id="btn-descarga" onclick="descargarCredencial()">⬇ Descargar Imagen</button>
+        </div>
+
+    </div>
+
+    <script>
+        function actualizarTexto(idInput, idRender, textoPorDefecto) {
+            const texto = document.getElementById(idInput).value;
+            document.getElementById(idRender).innerText = texto || textoPorDefecto; 
+        }
+
+        function cargarFoto(event) {
+            const archivo = event.target.files[0];
+            if (archivo) {
+                const lector = new FileReader();
+                lector.onload = function(e) {
+                    // Ahora se inyecta directamente el archivo al src de la imagen
+                    document.getElementById('render-foto').src = e.target.result;
+                }
+                lector.readAsDataURL(archivo);
+            }
+        }
+
+        function descargarCredencial() {
+            const boton = document.getElementById('btn-descarga');
+            const nodoCredencial = document.getElementById('credencial-final');
+            
+            boton.innerText = "Generando...";
+            boton.disabled = true;
+
+            html2canvas(nodoCredencial, { 
+                scale: 3, 
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#000000' 
+            }).then(canvas => {
+                try {
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.95); 
+                    const enlace = document.createElement('a');
+                    enlace.download = 'IRF2026-Talento.jpg';
+                    enlace.href = dataUrl;
+                    enlace.click();
+                    
+                    boton.innerText = "⬇ Descargar Imagen";
+                    boton.disabled = false;
+                } catch (error) {
+                    alert("⚠️ Aviso de Seguridad Local:\nEl código funciona perfectamente, pero tu navegador bloquea la descarga porque abriste el archivo con doble clic.\n\nSolución: Sube los archivos a GitHub/Vercel o usa un Live Server para probarlo.");
+                    boton.innerText = "⬇ Descargar Imagen";
+                    boton.disabled = false;
+                }
+            }).catch(err => {
+                alert("Ocurrió un error al procesar la imagen.");
+                boton.innerText = "⬇ Descargar Imagen";
+                boton.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
