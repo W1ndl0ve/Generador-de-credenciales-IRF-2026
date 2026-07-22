@@ -48,9 +48,9 @@
     };
 
     const roles = {
-        becario: { badge: "BECARIO", accent: "#ffc83d", file: "Becario" },
-        mentor: { badge: "MENTOR", accent: "#ffad55", file: "Mentor" },
-        organizador: { badge: "ORGANIZADOR", accent: "#ff856b", file: "Organizador" }
+        becario: { badge: "COHORTE", accent: "#ffc83d", file: "Becario" },
+        mentor: { badge: "MENTOR", accent: "#f2f4f7", file: "Mentor" },
+        organizador: { badge: "ORGANIZADOR", accent: "#5b9fe3", file: "Organizador" }
     };
 
     const assets = {
@@ -428,7 +428,7 @@
         context.lineTo(1140, 1100);
         context.stroke();
         context.fillStyle = "#73737c";
-        context.font = "700 14px Montserrat, Arial, sans-serif";
+        context.font = "700 17px Montserrat, Arial, sans-serif";
         context.textBaseline = "alphabetic";
         context.textAlign = "left";
         context.fillText("IMPACT REGIONAL FELLOWSHIP", 60, 1148);
