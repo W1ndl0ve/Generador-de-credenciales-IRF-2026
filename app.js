@@ -48,9 +48,9 @@
     };
 
     const roles = {
-        becario: { badge: "BECARIO/A · 2026", accent: "#ffc83d", file: "Becario" },
-        mentor: { badge: "MENTOR/A · 2026", accent: "#ffad55", file: "Mentor" },
-        organizador: { badge: "ORGANIZADOR/A · 2026", accent: "#ff856b", file: "Organizador" }
+        becario: { badge: "BECARIO", accent: "#ffc83d", file: "Becario" },
+        mentor: { badge: "MENTOR", accent: "#ffad55", file: "Mentor" },
+        organizador: { badge: "ORGANIZADOR", accent: "#ff856b", file: "Organizador" }
     };
 
     const assets = {
@@ -336,7 +336,10 @@
         context.fillRect(0, 0, 408, 7);
         context.drawImage(assets.wordmark, 72, 66, 384, 108);
 
-        roundedRect(context, 844, 78, 284, 54, 27);
+        context.font = "800 18px Montserrat, Arial, sans-serif";
+        const badgeWidth = Math.max(170, context.measureText(roles[role].badge).width + 76);
+        const badgeX = 1128 - badgeWidth;
+        roundedRect(context, badgeX, 78, badgeWidth, 54, 27);
         context.fillStyle = "rgba(10,10,10,.58)";
         context.fill();
         context.strokeStyle = accent;
@@ -346,7 +349,7 @@
         context.textAlign = "center";
         context.textBaseline = "middle";
         context.font = "800 18px Montserrat, Arial, sans-serif";
-        context.fillText(roles[role].badge, 986, 106);
+        context.fillText(roles[role].badge, badgeX + badgeWidth / 2, 106);
 
         context.save();
         context.fillStyle = accent;
