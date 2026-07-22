@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#0a0a0a">
     <meta name="description" content="Generador oficial de credenciales para becarios de Impact Regional Fellowship 2026.">
-    <meta property="og:title" content="Credencial IRF 2026">
-    <meta property="og:description" content="El talento nace en las regiones. Crea y comparte tu credencial IRF 2026.">
-    <title>Generador de credenciales · IRF 2026</title>
+    <meta property="og:title" content="Credencial IRF26">
+    <meta property="og:description" content="El talento nace en las regiones. Crea y comparte tu credencial IRF26.">
+    <title>Generador de credenciales · IRF26</title>
     <link rel="icon" href="irf-icon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +31,7 @@
     <main id="main" class="page">
         <section class="intro" aria-labelledby="page-title">
             <div class="intro-copy">
-                <p class="eyebrow"><span>IRF 2026</span> · Tu viaje comienza aquí</p>
+                <p class="eyebrow"><span>IRF26</span> · Tu viaje comienza aquí</p>
                 <h1 id="page-title">Haz visible el talento de <span>tu región.</span></h1>
                 <p class="lead">Crea tu credencial oficial, descárgala en alta calidad y comparte con orgullo que eres parte de la nueva generación de líderes regionales.</p>
             </div>
@@ -49,7 +49,6 @@
                         <p class="step-label">01 · Personaliza</p>
                         <h2>Crea tu credencial</h2>
                     </div>
-                    <span class="completion" id="completion">0 de 3</span>
                 </div>
 
                 <form id="credential-form" novalidate>
@@ -134,10 +133,6 @@
                             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14"/></svg>
                             <span>Descargar credencial</span>
                         </button>
-                        <button class="button button-secondary" id="share" type="button" hidden>
-                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.5M8.2 13.2l7.6 4.5"/></svg>
-                            <span>Compartir</span>
-                        </button>
                     </div>
                     <button class="reset-button" id="reset" type="button">Limpiar y empezar de nuevo</button>
                 </form>
@@ -159,17 +154,11 @@
 
                 <div class="credential-shell">
                     <article class="credential" id="credential" aria-label="Vista previa de la credencial">
-                        <img class="credential-background" src="Fondo.jpg" alt="">
-                        <div class="credential-shade" aria-hidden="true"></div>
-                        <div class="credential-glow" aria-hidden="true"></div>
-                        <div class="credential-grid" aria-hidden="true"></div>
+                        <img class="credential-background" src="base.jpg" alt="">
 
                         <header class="credential-header">
-                            <img src="irf-wordmark.png" alt="Impact Regional Fellowship 2026">
-                            <span>BECARIO/A · 2026</span>
+                            <span>COHORTE · 2026</span>
                         </header>
-
-                        <p class="credential-message">EMPIEZA MI VIAJE EN EL <b>IRF'26</b></p>
 
                         <div class="portrait-ring">
                             <div class="portrait" id="portrait">
@@ -182,16 +171,9 @@
                         </div>
 
                         <div class="credential-data">
-                            <span class="credential-role">TALENTO REGIONAL</span>
                             <h3 id="preview-name">Nombre Apellido</h3>
-                            <p>Representando a <strong id="preview-region">tu región</strong></p>
-                            <div class="credential-tag"><i></i> #ElTalentoNaceEnLasRegiones</div>
+                            <p>#El talento nace en <strong id="preview-region">tu región</strong></p>
                         </div>
-
-                        <footer class="credential-footer">
-                            <span>IMPACT REGIONAL FELLOWSHIP</span>
-                            <span>SPINOUT · PERÚ</span>
-                        </footer>
                     </article>
                 </div>
 

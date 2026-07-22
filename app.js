@@ -20,9 +20,7 @@
         zoom: $("#zoom"),
         centerPhoto: $("#center-photo"),
         download: $("#download"),
-        share: $("#share"),
         reset: $("#reset"),
-        completion: $("#completion"),
         nameError: $("#name-error"),
         regionError: $("#region-error"),
         photoError: $("#photo-error"),
@@ -47,8 +45,7 @@
     };
 
     const assets = {
-        background: loadAsset("Fondo.jpg"),
-        wordmark: loadAsset("irf-wordmark.png")
+        background: loadAsset("base.jpg")
     };
 
     function loadAsset(source) {
@@ -89,14 +86,6 @@
         elements.nameCount.textContent = elements.name.value.length;
         if (name) setError("name", "");
         if (region) setError("region", "");
-        updateCompletion();
-    }
-
-    function updateCompletion() {
-        const completed = [cleanText(elements.name.value), elements.region.value, state.photoFile].filter(Boolean).length;
-        elements.completion.textContent = `${completed} de 3`;
-        elements.completion.style.color = completed === 3 ? "#ffc725" : "";
-        elements.completion.style.borderColor = completed === 3 ? "rgba(255,199,37,.28)" : "";
     }
 
     function validateForm() {
@@ -196,7 +185,6 @@
                 elements.controls.hidden = false;
                 elements.uploadTitle.textContent = file.name;
                 elements.uploadHelp.textContent = `${fileSizeLabel(file.size)} · Lista para usar`;
-                updateCompletion();
             };
             elements.portraitImage.src = nextUrl;
         };
@@ -218,45 +206,18 @@
         context.closePath();
     }
 
-    function drawImageCover(context, image, x, y, width, height) {
-        const sourceRatio = image.naturalWidth / image.naturalHeight;
-        const targetRatio = width / height;
-        let sourceX = 0;
-        let sourceY = 0;
-        let sourceWidth = image.naturalWidth;
-        let sourceHeight = image.naturalHeight;
-        if (sourceRatio > targetRatio) {
-            sourceWidth = image.naturalHeight * targetRatio;
-            sourceX = (image.naturalWidth - sourceWidth) / 2;
-        } else {
-            sourceHeight = image.naturalWidth / targetRatio;
-            sourceY = (image.naturalHeight - sourceHeight) / 2;
-        }
-        context.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, x, y, width, height);
-    }
-
-    function drawFittedText(context, text, x, y, maxWidth, initialSize, weight) {
-        let size = initialSize;
-        do {
-            context.font = `${weight} ${size}px Montserrat, Arial, sans-serif`;
-            if (context.measureText(text).width <= maxWidth) break;
-            size -= 2;
-        } while (size > 34);
-        context.fillText(text, x, y);
-    }
-
     function drawCanvasPhoto(context) {
         const image = elements.portraitImage;
-        const size = 420;
+        const size = 490;
         const rendered = imageCoverSize(image, size, state.zoom);
         const previewSize = elements.portrait.clientWidth;
         const factor = size / previewSize;
         const x = 600 - rendered.width / 2 + state.offsetX * factor;
-        const y = 531 - rendered.height / 2 + state.offsetY * factor;
+        const y = 485 - rendered.height / 2 + state.offsetY * factor;
 
         context.save();
         context.beginPath();
-        context.arc(600, 531, 210, 0, Math.PI * 2);
+        context.arc(600, 485, 245, 0, Math.PI * 2);
         context.clip();
         context.drawImage(image, x, y, rendered.width, rendered.height);
         context.restore();
@@ -265,7 +226,6 @@
     async function renderCredential() {
         await Promise.all([
             waitForImage(assets.background),
-            waitForImage(assets.wordmark),
             waitForImage(elements.portraitImage),
             document.fonts?.ready || Promise.resolve()
         ]);
@@ -277,48 +237,10 @@
         context.imageSmoothingEnabled = true;
         context.imageSmoothingQuality = "high";
 
-        drawImageCover(context, assets.background, 0, 0, 1200, 1200);
+        context.drawImage(assets.background, 0, 0, 1200, 1200);
 
-        const shade = context.createLinearGradient(0, 0, 0, 1200);
-        shade.addColorStop(0, "rgba(5,5,5,.72)");
-        shade.addColorStop(.42, "rgba(5,5,5,.35)");
-        shade.addColorStop(.86, "rgba(5,5,5,.96)");
-        shade.addColorStop(1, "rgba(5,5,5,.99)");
-        context.fillStyle = shade;
-        context.fillRect(0, 0, 1200, 1200);
-
-        const glow = context.createRadialGradient(600, 370, 30, 600, 370, 470);
-        glow.addColorStop(0, "rgba(255,167,38,.2)");
-        glow.addColorStop(1, "rgba(255,167,38,0)");
-        context.fillStyle = glow;
-        context.fillRect(0, 0, 1200, 800);
-
-        context.save();
-        context.globalAlpha = .055;
-        context.strokeStyle = "#ffffff";
-        context.lineWidth = 1;
-        for (let line = 100; line < 1200; line += 100) {
-            context.beginPath();
-            context.moveTo(line, 0);
-            context.lineTo(line, 660);
-            context.stroke();
-            context.beginPath();
-            context.moveTo(0, line);
-            context.lineTo(1200, line);
-            context.stroke();
-        }
-        context.restore();
-
-        const accent = context.createLinearGradient(0, 0, 410, 0);
-        accent.addColorStop(0, "#ffa726");
-        accent.addColorStop(1, "#ffc725");
-        context.fillStyle = accent;
-        context.fillRect(0, 0, 408, 7);
-
-        context.drawImage(assets.wordmark, 72, 66, 384, 108);
-
-        roundedRect(context, 862, 78, 266, 54, 27);
-        context.fillStyle = "rgba(10,10,10,.55)";
+        roundedRect(context, 906, 54, 238, 50, 25);
+        context.fillStyle = "rgba(10,10,10,.62)";
         context.fill();
         context.strokeStyle = "rgba(255,199,37,.38)";
         context.lineWidth = 2;
@@ -326,94 +248,41 @@
         context.fillStyle = "#f4d96e";
         context.textAlign = "center";
         context.textBaseline = "middle";
-        context.font = "800 19px Montserrat, Arial, sans-serif";
-        context.fillText("BECARIO/A · 2026", 995, 106);
+        context.font = "800 18px Montserrat, Arial, sans-serif";
+        context.fillText("COHORTE · 2026", 1025, 79);
 
-        context.font = "600 26px Montserrat, Arial, sans-serif";
-        context.fillStyle = "#dedee2";
-        const message = "EMPIEZA MI VIAJE EN EL ";
-        const suffix = "IRF'26";
-        context.font = "600 26px Montserrat, Arial, sans-serif";
-        const messageWidth = context.measureText(message).width;
-        context.font = "900 26px Montserrat, Arial, sans-serif";
-        const suffixWidth = context.measureText(suffix).width;
-        let messageX = 600 - (messageWidth + suffixWidth) / 2;
-        context.textAlign = "left";
-        context.font = "600 26px Montserrat, Arial, sans-serif";
-        context.fillStyle = "#dedee2";
-        context.fillText(message, messageX, 230);
-        context.font = "900 26px Montserrat, Arial, sans-serif";
-        context.fillStyle = "#ffc725";
-        context.fillText(suffix, messageX + messageWidth, 230);
-
-        context.save();
-        context.shadowColor = "rgba(255,167,38,.35)";
-        context.shadowBlur = 42;
-        context.beginPath();
-        context.arc(600, 531, 231, 0, Math.PI * 2);
-        context.fillStyle = accent;
-        context.fill();
-        context.restore();
-        context.beginPath();
-        context.arc(600, 531, 218, 0, Math.PI * 2);
-        context.fillStyle = "#0b0b0b";
-        context.fill();
         drawCanvasPhoto(context);
+        context.beginPath();
+        context.arc(600, 485, 249, 0, Math.PI * 2);
+        context.strokeStyle = "#ffc21f";
+        context.lineWidth = 7;
+        context.stroke();
 
         context.textAlign = "center";
         context.textBaseline = "middle";
         context.fillStyle = "#ffc725";
-        context.font = "800 19px Montserrat, Arial, sans-serif";
-        context.fillText("TALENTO REGIONAL", 600, 818);
+        let nameSize = 62;
+        do {
+            context.font = `700 ${nameSize}px Georgia, "Times New Roman", serif`;
+            if (context.measureText(cleanText(elements.name.value)).width <= 1020) break;
+            nameSize -= 2;
+        } while (nameSize > 38);
+        context.fillText(cleanText(elements.name.value), 600, 824);
 
-        context.fillStyle = "#ffffff";
-        drawFittedText(context, cleanText(elements.name.value), 600, 868, 1040, 68, 900);
-
-        const prefix = "Representando a ";
+        const prefix = "#El talento nace en ";
         const region = elements.region.value;
-        context.font = "400 27px Montserrat, Arial, sans-serif";
+        context.font = "400 42px Georgia, 'Times New Roman', serif";
         const prefixWidth = context.measureText(prefix).width;
-        context.font = "700 27px Montserrat, Arial, sans-serif";
+        context.font = "700 42px Georgia, 'Times New Roman', serif";
         const regionWidth = context.measureText(region).width;
         const regionStart = 600 - (prefixWidth + regionWidth) / 2;
         context.textAlign = "left";
-        context.fillStyle = "#d1d1d5";
-        context.font = "400 27px Montserrat, Arial, sans-serif";
-        context.fillText(prefix, regionStart, 928);
         context.fillStyle = "#ffffff";
-        context.font = "700 27px Montserrat, Arial, sans-serif";
-        context.fillText(region, regionStart + prefixWidth, 928);
-
-        const tag = "#ElTalentoNaceEnLasRegiones";
-        context.font = "600 18px Montserrat, Arial, sans-serif";
-        const tagWidth = context.measureText(tag).width + 76;
-        roundedRect(context, 600 - tagWidth / 2, 974, tagWidth, 52, 26);
-        context.fillStyle = "rgba(255,255,255,.06)";
-        context.fill();
-        context.strokeStyle = "rgba(255,255,255,.16)";
-        context.lineWidth = 2;
-        context.stroke();
-        context.beginPath();
-        context.arc(600 - tagWidth / 2 + 27, 1000, 5, 0, Math.PI * 2);
+        context.font = "400 42px Georgia, 'Times New Roman', serif";
+        context.fillText(prefix, regionStart, 905);
         context.fillStyle = "#ffc725";
-        context.fill();
-        context.textAlign = "left";
-        context.fillStyle = "#d1d1d5";
-        context.fillText(tag, 600 - tagWidth / 2 + 46, 1000);
-
-        context.strokeStyle = "rgba(255,255,255,.13)";
-        context.lineWidth = 1;
-        context.beginPath();
-        context.moveTo(60, 1100);
-        context.lineTo(1140, 1100);
-        context.stroke();
-        context.fillStyle = "#73737c";
-        context.font = "700 14px Montserrat, Arial, sans-serif";
-        context.textBaseline = "alphabetic";
-        context.textAlign = "left";
-        context.fillText("IMPACT REGIONAL FELLOWSHIP", 60, 1148);
-        context.textAlign = "right";
-        context.fillText("SPINOUT · PERÚ", 1140, 1148);
+        context.font = "700 42px Georgia, 'Times New Roman', serif";
+        context.fillText(region, regionStart + prefixWidth, 905);
 
         return canvas;
     }
@@ -432,12 +301,11 @@
             .replace(/^-|-$/g, "") || "becario";
     }
 
-    function setBusy(busy, action = "download") {
+    function setBusy(busy) {
         state.busy = busy;
         elements.download.disabled = busy;
-        elements.share.disabled = busy;
         const label = elements.download.querySelector("span");
-        label.textContent = busy && action === "download" ? "Generando imagen…" : "Descargar credencial";
+        label.textContent = busy ? "Generando imagen…" : "Descargar credencial";
     }
 
     function showToast(title, message) {
@@ -451,12 +319,12 @@
     async function makeFile() {
         const canvas = await renderCredential();
         const blob = await canvasToBlob(canvas);
-        return new File([blob], `IRF2026-${safeFileName()}.png`, { type: "image/png" });
+        return new File([blob], `IRF26-${safeFileName()}.png`, { type: "image/png" });
     }
 
     async function downloadCredential() {
         if (state.busy || !validateForm()) return;
-        setBusy(true, "download");
+        setBusy(true);
         try {
             const file = await makeFile();
             const url = URL.createObjectURL(file);
@@ -470,25 +338,6 @@
             showToast("¡Credencial lista!", "Se descargó en alta resolución y ya puedes compartirla.");
         } catch (error) {
             showToast("No pudimos descargarla", "Recarga la página e inténtalo nuevamente.");
-        } finally {
-            setBusy(false);
-        }
-    }
-
-    async function shareCredential() {
-        if (state.busy || !validateForm()) return;
-        setBusy(true, "share");
-        try {
-            const file = await makeFile();
-            if (!navigator.canShare?.({ files: [file] })) throw new Error("El dispositivo no permite compartir archivos.");
-            await navigator.share({
-                files: [file],
-                title: "Mi credencial IRF 2026",
-                text: `Soy parte de Impact Regional Fellowship 2026 representando a ${elements.region.value}. #ElTalentoNaceEnLasRegiones`
-            });
-            showToast("¡Lista para inspirar!", "Gracias por compartir el talento de tu región.");
-        } catch (error) {
-            if (error.name !== "AbortError") showToast("No se pudo compartir", "Puedes descargar la imagen y compartirla desde tu galería.");
         } finally {
             setBusy(false);
         }
@@ -526,8 +375,6 @@
         event.preventDefault();
         downloadCredential();
     });
-    elements.share.addEventListener("click", shareCredential);
-
     ["dragenter", "dragover"].forEach(type => elements.upload.addEventListener(type, event => {
         event.preventDefault();
         elements.upload.classList.add("is-dragging");
@@ -559,6 +406,5 @@
         if (state.photoUrl) URL.revokeObjectURL(state.photoUrl);
     });
 
-    if (typeof navigator.share === "function" && typeof File === "function") elements.share.hidden = false;
     updateTextPreview();
 })();
