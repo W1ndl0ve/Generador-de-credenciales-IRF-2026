@@ -4,6 +4,9 @@
     const $ = selector => document.querySelector(selector);
     const elements = {
         form: $("#credential-form"),
+        credential: $("#credential"),
+        roles: [...document.querySelectorAll('input[name="role"]')],
+        previewRole: $("#preview-role"),
         name: $("#name"),
         region: $("#region"),
         photoInput: $("#photo"),
@@ -44,8 +47,15 @@
         busy: false
     };
 
+    const roles = {
+        becario: { badge: "BECARIO/A · 2026", accent: "#ffc83d", file: "Becario" },
+        mentor: { badge: "MENTOR/A · 2026", accent: "#ffad55", file: "Mentor" },
+        organizador: { badge: "ORGANIZADOR/A · 2026", accent: "#ff856b", file: "Organizador" }
+    };
+
     const assets = {
-        background: loadAsset("base.jpg")
+        background: loadAsset("Fondo.jpg"),
+        wordmark: loadAsset("irf-wordmark.png")
     };
 
     function loadAsset(source) {
@@ -65,6 +75,16 @@
 
     function cleanText(value) {
         return value.trim().replace(/\s+/g, " ");
+    }
+
+    function selectedRole() {
+        return elements.roles.find(input => input.checked)?.value || "becario";
+    }
+
+    function updateRolePreview() {
+        const role = selectedRole();
+        elements.credential.dataset.role = role;
+        elements.previewRole.textContent = roles[role].badge;
     }
 
     function setError(field, message) {
@@ -206,26 +226,69 @@
         context.closePath();
     }
 
+    function drawImageCover(context, image, x, y, width, height) {
+        const sourceRatio = image.naturalWidth / image.naturalHeight;
+        const targetRatio = width / height;
+        let sourceX = 0;
+        let sourceY = 0;
+        let sourceWidth = image.naturalWidth;
+        let sourceHeight = image.naturalHeight;
+        if (sourceRatio > targetRatio) {
+            sourceWidth = image.naturalHeight * targetRatio;
+            sourceX = (image.naturalWidth - sourceWidth) / 2;
+        } else {
+            sourceHeight = image.naturalWidth / targetRatio;
+            sourceY = (image.naturalHeight - sourceHeight) / 2;
+        }
+        context.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, x, y, width, height);
+    }
+
+    function drawCurvedText(context, text, centerX, centerY, radius) {
+        const spacing = 2;
+        const characters = [...text];
+        const widths = characters.map(character => context.measureText(character).width + spacing);
+        const totalAngle = widths.reduce((sum, width) => sum + width, 0) / radius;
+        let angle = -Math.PI / 2 - totalAngle / 2;
+
+        context.save();
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        characters.forEach((character, index) => {
+            const characterAngle = widths[index] / radius;
+            angle += characterAngle / 2;
+            context.save();
+            context.translate(centerX + Math.cos(angle) * radius, centerY + Math.sin(angle) * radius);
+            context.rotate(angle + Math.PI / 2);
+            context.fillText(character, 0, 0);
+            context.restore();
+            angle += characterAngle / 2;
+        });
+        context.restore();
+    }
+
     function drawCanvasPhoto(context) {
         const image = elements.portraitImage;
-        const size = 490;
+        const size = 420;
         const rendered = imageCoverSize(image, size, state.zoom);
         const previewSize = elements.portrait.clientWidth;
         const factor = size / previewSize;
         const x = 600 - rendered.width / 2 + state.offsetX * factor;
-        const y = 485 - rendered.height / 2 + state.offsetY * factor;
+        const y = 535 - rendered.height / 2 + state.offsetY * factor;
 
         context.save();
         context.beginPath();
-        context.arc(600, 485, 245, 0, Math.PI * 2);
+        context.arc(600, 535, 210, 0, Math.PI * 2);
         context.clip();
         context.drawImage(image, x, y, rendered.width, rendered.height);
         context.restore();
     }
 
     async function renderCredential() {
+        const role = selectedRole();
+        const accent = roles[role].accent;
         await Promise.all([
             waitForImage(assets.background),
+            waitForImage(assets.wordmark),
             waitForImage(elements.portraitImage),
             document.fonts?.ready || Promise.resolve()
         ]);
@@ -237,52 +300,137 @@
         context.imageSmoothingEnabled = true;
         context.imageSmoothingQuality = "high";
 
-        context.drawImage(assets.background, 0, 0, 1200, 1200);
+        drawImageCover(context, assets.background, 0, 0, 1200, 1200);
 
-        roundedRect(context, 906, 54, 238, 50, 25);
-        context.fillStyle = "rgba(10,10,10,.62)";
+        const shade = context.createLinearGradient(0, 0, 0, 1200);
+        shade.addColorStop(0, "rgba(5,5,5,.7)");
+        shade.addColorStop(.44, "rgba(5,5,5,.32)");
+        shade.addColorStop(.87, "rgba(5,5,5,.97)");
+        shade.addColorStop(1, "rgba(5,5,5,.99)");
+        context.fillStyle = shade;
+        context.fillRect(0, 0, 1200, 1200);
+
+        const glow = context.createRadialGradient(600, 430, 40, 600, 430, 480);
+        glow.addColorStop(0, `${accent}30`);
+        glow.addColorStop(1, `${accent}00`);
+        context.fillStyle = glow;
+        context.fillRect(0, 0, 1200, 850);
+
+        context.save();
+        context.globalAlpha = .055;
+        context.strokeStyle = "#ffffff";
+        context.lineWidth = 1;
+        for (let line = 100; line < 1200; line += 100) {
+            context.beginPath();
+            context.moveTo(line, 0);
+            context.lineTo(line, 690);
+            context.stroke();
+            context.beginPath();
+            context.moveTo(0, line);
+            context.lineTo(1200, line);
+            context.stroke();
+        }
+        context.restore();
+
+        context.fillStyle = accent;
+        context.fillRect(0, 0, 408, 7);
+        context.drawImage(assets.wordmark, 72, 66, 384, 108);
+
+        roundedRect(context, 844, 78, 284, 54, 27);
+        context.fillStyle = "rgba(10,10,10,.58)";
         context.fill();
-        context.strokeStyle = "rgba(255,199,37,.38)";
+        context.strokeStyle = accent;
         context.lineWidth = 2;
         context.stroke();
-        context.fillStyle = "#f4d96e";
+        context.fillStyle = accent;
         context.textAlign = "center";
         context.textBaseline = "middle";
         context.font = "800 18px Montserrat, Arial, sans-serif";
-        context.fillText("COHORTE · 2026", 1025, 79);
+        context.fillText(roles[role].badge, 986, 106);
+
+        context.save();
+        context.fillStyle = accent;
+        context.shadowColor = "rgba(0,0,0,.75)";
+        context.shadowBlur = 10;
+        context.font = "700 29px Montserrat, Arial, sans-serif";
+        drawCurvedText(context, "¡Empieza mi viaje en el IRF26!", 600, 535, 270);
+        context.restore();
+
+        context.save();
+        context.shadowColor = `${accent}99`;
+        context.shadowBlur = 72;
+        context.beginPath();
+        context.arc(600, 535, 231, 0, Math.PI * 2);
+        context.fillStyle = accent;
+        context.fill();
+        context.restore();
+        context.beginPath();
+        context.arc(600, 535, 218, 0, Math.PI * 2);
+        context.fillStyle = "#0b0b0b";
+        context.fill();
 
         drawCanvasPhoto(context);
-        context.beginPath();
-        context.arc(600, 485, 249, 0, Math.PI * 2);
-        context.strokeStyle = "#ffc21f";
-        context.lineWidth = 7;
-        context.stroke();
 
         context.textAlign = "center";
         context.textBaseline = "middle";
-        context.fillStyle = "#ffc725";
-        let nameSize = 62;
+        context.fillStyle = "#ffffff";
+        context.font = "800 19px Montserrat, Arial, sans-serif";
+        context.fillText("TALENTO REGIONAL", 600, 813);
+
+        context.fillStyle = accent;
+        let nameSize = 60;
         do {
-            context.font = `700 ${nameSize}px Georgia, "Times New Roman", serif`;
-            if (context.measureText(cleanText(elements.name.value)).width <= 1020) break;
+            context.font = `900 ${nameSize}px Montserrat, Arial, sans-serif`;
+            if (context.measureText(cleanText(elements.name.value)).width <= 1060) break;
             nameSize -= 2;
         } while (nameSize > 38);
-        context.fillText(cleanText(elements.name.value), 600, 824);
+        context.fillText(cleanText(elements.name.value), 600, 866);
 
-        const prefix = "#El talento nace en ";
+        const prefix = "Representando a ";
         const region = elements.region.value;
-        context.font = "400 42px Georgia, 'Times New Roman', serif";
+        context.font = "400 27px Montserrat, Arial, sans-serif";
         const prefixWidth = context.measureText(prefix).width;
-        context.font = "700 42px Georgia, 'Times New Roman', serif";
+        context.font = "700 27px Montserrat, Arial, sans-serif";
         const regionWidth = context.measureText(region).width;
         const regionStart = 600 - (prefixWidth + regionWidth) / 2;
         context.textAlign = "left";
         context.fillStyle = "#ffffff";
-        context.font = "400 42px Georgia, 'Times New Roman', serif";
-        context.fillText(prefix, regionStart, 905);
-        context.fillStyle = "#ffc725";
-        context.font = "700 42px Georgia, 'Times New Roman', serif";
-        context.fillText(region, regionStart + prefixWidth, 905);
+        context.font = "400 27px Montserrat, Arial, sans-serif";
+        context.fillText(prefix, regionStart, 928);
+        context.fillStyle = accent;
+        context.font = "700 27px Montserrat, Arial, sans-serif";
+        context.fillText(region, regionStart + prefixWidth, 928);
+
+        const tag = "#ElTalentoNaceEnLasRegiones";
+        context.font = "600 18px Montserrat, Arial, sans-serif";
+        const tagWidth = context.measureText(tag).width + 76;
+        roundedRect(context, 600 - tagWidth / 2, 974, tagWidth, 52, 26);
+        context.fillStyle = "rgba(255,255,255,.06)";
+        context.fill();
+        context.strokeStyle = "rgba(255,255,255,.16)";
+        context.lineWidth = 2;
+        context.stroke();
+        context.beginPath();
+        context.arc(600 - tagWidth / 2 + 27, 1000, 5, 0, Math.PI * 2);
+        context.fillStyle = accent;
+        context.fill();
+        context.textAlign = "left";
+        context.fillStyle = "#d1d1d5";
+        context.fillText(tag, 600 - tagWidth / 2 + 46, 1000);
+
+        context.strokeStyle = "rgba(255,255,255,.13)";
+        context.lineWidth = 1;
+        context.beginPath();
+        context.moveTo(60, 1100);
+        context.lineTo(1140, 1100);
+        context.stroke();
+        context.fillStyle = "#73737c";
+        context.font = "700 14px Montserrat, Arial, sans-serif";
+        context.textBaseline = "alphabetic";
+        context.textAlign = "left";
+        context.fillText("IMPACT REGIONAL FELLOWSHIP", 60, 1148);
+        context.textAlign = "right";
+        context.fillText("SPINOUT · PERÚ", 1140, 1148);
 
         return canvas;
     }
@@ -319,7 +467,7 @@
     async function makeFile() {
         const canvas = await renderCredential();
         const blob = await canvasToBlob(canvas);
-        return new File([blob], `IRF26-${safeFileName()}.png`, { type: "image/png" });
+        return new File([blob], `IRF26-${roles[selectedRole()].file}-${safeFileName()}.png`, { type: "image/png" });
     }
 
     async function downloadCredential() {
@@ -358,12 +506,14 @@
         elements.uploadTitle.textContent = "Sube una foto clara";
         elements.uploadHelp.textContent = "JPG, PNG o WEBP · Máx. 15 MB";
         ["name", "region", "photo"].forEach(field => setError(field, ""));
+        updateRolePreview();
         updateTextPreview();
         elements.name.focus();
     }
 
     elements.name.addEventListener("input", updateTextPreview);
     elements.region.addEventListener("change", updateTextPreview);
+    elements.roles.forEach(input => input.addEventListener("change", updateRolePreview));
     elements.photoInput.addEventListener("change", event => loadPhoto(event.target.files[0]));
     elements.zoom.addEventListener("input", () => {
         state.zoom = Number(elements.zoom.value);
@@ -406,5 +556,6 @@
         if (state.photoUrl) URL.revokeObjectURL(state.photoUrl);
     });
 
+    updateRolePreview();
     updateTextPreview();
 })();

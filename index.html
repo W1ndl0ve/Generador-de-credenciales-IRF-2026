@@ -53,6 +53,33 @@
 
                 <form id="credential-form" novalidate>
                     <div class="form-grid">
+                        <fieldset class="field role-field">
+                            <legend>¿Cuál es tu participación?</legend>
+                            <div class="role-options">
+                                <label class="role-option role-becario">
+                                    <input type="radio" name="role" value="becario" checked>
+                                    <span class="role-check">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 12 4 4 8-9"/></svg>
+                                    </span>
+                                    <span><strong>Becario</strong><small>Talento IRF26</small></span>
+                                </label>
+                                <label class="role-option role-mentor">
+                                    <input type="radio" name="role" value="mentor">
+                                    <span class="role-check">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 12 4 4 8-9"/></svg>
+                                    </span>
+                                    <span><strong>Mentor</strong><small>Guía IRF26</small></span>
+                                </label>
+                                <label class="role-option role-organizador">
+                                    <input type="radio" name="role" value="organizador">
+                                    <span class="role-check">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 12 4 4 8-9"/></svg>
+                                    </span>
+                                    <span><strong>Organizador</strong><small>Equipo IRF26</small></span>
+                                </label>
+                            </div>
+                        </fieldset>
+
                         <div class="field">
                             <div class="label-row">
                                 <label for="name">Nombre y apellido</label>
@@ -154,11 +181,20 @@
 
                 <div class="credential-shell">
                     <article class="credential" id="credential" aria-label="Vista previa de la credencial">
-                        <img class="credential-background" src="base.jpg" alt="">
+                        <img class="credential-background" src="Fondo.jpg" alt="">
+                        <div class="credential-shade" aria-hidden="true"></div>
+                        <div class="credential-glow" aria-hidden="true"></div>
+                        <div class="credential-grid" aria-hidden="true"></div>
 
                         <header class="credential-header">
-                            <span>COHORTE · 2026</span>
+                            <img src="irf-wordmark.png" alt="Impact Regional Fellowship 2026">
+                            <span id="preview-role">BECARIO/A · 2026</span>
                         </header>
+
+                        <svg class="credential-arc" viewBox="0 0 1200 1200" aria-hidden="true">
+                            <defs><path id="journey-arc" d="M 346 443 A 270 270 0 0 1 854 443"/></defs>
+                            <text><textPath href="#journey-arc" startOffset="50%" text-anchor="middle">¡Empieza mi viaje en el IRF26!</textPath></text>
+                        </svg>
 
                         <div class="portrait-ring">
                             <div class="portrait" id="portrait">
@@ -171,9 +207,16 @@
                         </div>
 
                         <div class="credential-data">
+                            <span class="credential-role">TALENTO REGIONAL</span>
                             <h3 id="preview-name">Nombre Apellido</h3>
-                            <p>#El talento nace en <strong id="preview-region">tu región</strong></p>
+                            <p>Representando a <strong id="preview-region">tu región</strong></p>
+                            <div class="credential-tag"><i></i> #ElTalentoNaceEnLasRegiones</div>
                         </div>
+
+                        <footer class="credential-footer">
+                            <span>IMPACT REGIONAL FELLOWSHIP</span>
+                            <span>SPINOUT · PERÚ</span>
+                        </footer>
                     </article>
                 </div>
 
