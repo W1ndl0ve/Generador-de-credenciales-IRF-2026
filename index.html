@@ -1,262 +1,229 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador IRF 2026</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="description" content="Generador oficial de credenciales para becarios de Impact Regional Fellowship 2026.">
+    <meta property="og:title" content="Credencial IRF 2026">
+    <meta property="og:description" content="El talento nace en las regiones. Crea y comparte tu credencial IRF 2026.">
+    <title>Generador de credenciales · IRF 2026</title>
+    <link rel="icon" href="irf-icon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <style>
-        body {
-            background-color: #0d1117;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('Fondo.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: #c9d1d9;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        .contenedor-principal {
-            display: flex;
-            gap: 40px;
-            background-color: rgba(22, 27, 34, 0.85); 
-            backdrop-filter: blur(10px); 
-            padding: 40px;
-            border-radius: 12px;
-            border: 1px solid rgba(48, 54, 61, 0.5);
-            max-width: 900px;
-            width: 100%;
-        }
-
-        .area-preview { flex: 1; display: flex; justify-content: center; }
-
-        .lienzo-credencial {
-            position: relative;
-            width: 400px; 
-            height: 400px;
-            background-color: #000000;
-            overflow: hidden;
-        }
-
-        .fondo-canva {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        /* Foto ajustada a etiqueta real <img> para no perder resolución */
-        .foto-perfil-render {
-            position: absolute;
-            top: 80px;    
-            left: 119px;    
-            width: 162px;  
-            height: 162px; 
-            object-fit: cover;
-            background-color: #21262d;
-            border-radius: 50%;
-            z-index: 2;
-        }
-
-        .textos-render {
-            position: absolute;
-            top: 260px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px; 
-            z-index: 3;
-            font-family: 'Georgia', serif; 
-        }
-
-        .textos-render h2 {
-            margin: 0;
-            font-size: 22px;
-            font-weight: normal;
-        }
-
-        .textos-render p {
-            margin: 0;
-            font-size: 14px;
-            color: white;
-        }
-
-        .texto-amarillo {
-            color: #f7c02b;
-        }
-
-        .area-formulario {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px; 
-            font-family: 'Montserrat', sans-serif; 
-        }
-        
-        .area-formulario h2 {
-            margin: 0; 
-            font-weight: 700;
-        }
-        
-        .subtitulo-form {
-            margin: 0 0 10px 0; 
-            color: #b1bac4; 
-            font-size: 14px;
-        }
-
-        .form-grupo { display: flex; flex-direction: column; gap: 8px; }
-        
-        .form-grupo label {
-            font-weight: 600;
-            font-size: 13px;
-            color: #e6edf3;
-        }
-
-        input[type="text"], input[type="file"] {
-            background-color: rgba(13, 17, 23, 0.8);
-            border: 1px solid #30363d;
-            color: white;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: 'Montserrat', sans-serif; 
-        }
-
-        .btn-generar {
-            background-color: #f7c02b;
-            color: #0d1117; 
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.2s, transform 0.1s;
-            font-family: 'Montserrat', sans-serif;
-            box-shadow: 0 4px 15px rgba(247, 192, 43, 0.2);
-        }
-        .btn-generar:hover { 
-            background-color: #e5b124; 
-            transform: translateY(-2px);
-        }
-        .btn-generar:disabled { background-color: #7a6119; color: #444; cursor: not-allowed; transform: none; box-shadow: none;}
-        
-        .logo-irf {
-            height: 60px; 
-            max-width: 250px; 
-            object-fit: contain;
-            margin-bottom: 10px; 
-            align-self: flex-start;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
 
-    <div class="contenedor-principal">
-        
-        <div class="area-preview">
-            <div class="lienzo-credencial" id="credencial-final">
-                <img src="base.jpg" class="fondo-canva" alt="Fondo Base">
-                
-                <!-- Etiqueta IMG real para no perder calidad -->
-                <img class="foto-perfil-render" id="render-foto" alt="">
-                
-                <div class="textos-render">
-                    <h2 id="render-nombre" class="texto-amarillo">Nombre Apellido</h2>
-                    <p>#El talento nace en <span id="render-region-span" class="texto-amarillo">Región</span></p>
+    <header class="site-header">
+        <a class="brand" href="#main" aria-label="Impact Regional Fellowship 2026">
+            <img src="irf-logo.png" alt="IRF26">
+        </a>
+        <div class="header-label">
+            <span class="status-dot" aria-hidden="true"></span>
+            Generador oficial
+        </div>
+    </header>
+
+    <main id="main" class="page">
+        <section class="intro" aria-labelledby="page-title">
+            <div class="intro-copy">
+                <p class="eyebrow"><span>IRF 2026</span> · Tu viaje comienza aquí</p>
+                <h1 id="page-title">Haz visible el talento de <span>tu región.</span></h1>
+                <p class="lead">Crea tu credencial oficial, descárgala en alta calidad y comparte con orgullo que eres parte de la nueva generación de líderes regionales.</p>
+            </div>
+            <div class="intro-meta" aria-label="Características del generador">
+                <div><strong>1200 × 1200</strong><span>Alta resolución</span></div>
+                <div><strong>100% privado</strong><span>Procesamiento local</span></div>
+                <div><strong>Lista al instante</strong><span>Sin registros</span></div>
+            </div>
+        </section>
+
+        <section class="studio" aria-label="Editor de credencial">
+            <div class="editor-panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="step-label">01 · Personaliza</p>
+                        <h2>Crea tu credencial</h2>
+                    </div>
+                    <span class="completion" id="completion">0 de 3</span>
+                </div>
+
+                <form id="credential-form" novalidate>
+                    <div class="form-grid">
+                        <div class="field">
+                            <div class="label-row">
+                                <label for="name">Nombre y apellido</label>
+                                <span><b id="name-count">0</b>/32</span>
+                            </div>
+                            <input id="name" name="name" type="text" maxlength="32" autocomplete="name" placeholder="Ej. Andrea Mendoza" required>
+                            <p class="field-error" id="name-error"></p>
+                        </div>
+
+                        <div class="field">
+                            <label for="region">Región que representas</label>
+                            <div class="select-wrap">
+                                <select id="region" name="region" required>
+                                    <option value="">Selecciona tu región</option>
+                                    <option>Amazonas</option>
+                                    <option>Áncash</option>
+                                    <option>Apurímac</option>
+                                    <option>Arequipa</option>
+                                    <option>Ayacucho</option>
+                                    <option>Cajamarca</option>
+                                    <option>Callao</option>
+                                    <option>Cusco</option>
+                                    <option>Huancavelica</option>
+                                    <option>Huánuco</option>
+                                    <option>Ica</option>
+                                    <option>Junín</option>
+                                    <option>La Libertad</option>
+                                    <option>Lambayeque</option>
+                                    <option>Lima</option>
+                                    <option>Loreto</option>
+                                    <option>Madre de Dios</option>
+                                    <option>Moquegua</option>
+                                    <option>Pasco</option>
+                                    <option>Piura</option>
+                                    <option>Puno</option>
+                                    <option>San Martín</option>
+                                    <option>Tacna</option>
+                                    <option>Tumbes</option>
+                                    <option>Ucayali</option>
+                                </select>
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+                            </div>
+                            <p class="field-error" id="region-error"></p>
+                        </div>
+
+                        <div class="field">
+                            <label for="photo">Tu fotografía</label>
+                            <label class="upload" id="upload" for="photo">
+                                <span class="upload-symbol">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5M5 14v5h14v-5"/></svg>
+                                </span>
+                                <span class="upload-copy">
+                                    <strong id="upload-title">Sube una foto clara</strong>
+                                    <small id="upload-help">JPG, PNG o WEBP · Máx. 15 MB</small>
+                                </span>
+                                <span class="upload-cta">Elegir</span>
+                                <input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp">
+                            </label>
+                            <p class="field-error" id="photo-error"></p>
+                        </div>
+
+                        <div class="photo-controls" id="photo-controls" hidden>
+                            <div class="control-heading">
+                                <span>Ajustar encuadre</span>
+                                <button type="button" id="center-photo">Centrar foto</button>
+                            </div>
+                            <div class="zoom-row">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg>
+                                <input type="range" id="zoom" min="1" max="2.5" value="1" step="0.01" aria-label="Zoom de la fotografía">
+                                <svg class="zoom-plus" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4M8 11h6m-3-3v6"/></svg>
+                            </div>
+                            <p>También puedes arrastrar la foto directamente en la vista previa.</p>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button class="button button-primary" id="download" type="submit">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14"/></svg>
+                            <span>Descargar credencial</span>
+                        </button>
+                        <button class="button button-secondary" id="share" type="button" hidden>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.5M8.2 13.2l7.6 4.5"/></svg>
+                            <span>Compartir</span>
+                        </button>
+                    </div>
+                    <button class="reset-button" id="reset" type="button">Limpiar y empezar de nuevo</button>
+                </form>
+
+                <div class="privacy">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                    <p><strong>Tu información es privada.</strong> Todo se procesa dentro de este dispositivo; ningún dato se envía ni se almacena.</p>
                 </div>
             </div>
-        </div>
 
-        <div class="area-formulario">
-            <img src="logo.png" class="logo-irf" alt="Logo SpinOut" onerror="this.style.display='none'">
-            
-            <h2>Becario IRF26,</h2>
-            <p class="subtitulo-form">Sube tu foto y representa a tu región.</p>
+            <div class="preview-panel">
+                <div class="preview-heading">
+                    <div>
+                        <p class="step-label">02 · Previsualiza</p>
+                        <h2>Así se verá</h2>
+                    </div>
+                    <span class="live-badge"><i></i> En vivo</span>
+                </div>
 
-            <div class="form-grupo">
-                <label>Nombre y Apellido</label>
-                <input type="text" id="input-nombre" placeholder="Ej. Nombre Apellido" oninput="actualizarTexto('input-nombre', 'render-nombre', 'Nombre Apellido')">
+                <div class="credential-shell">
+                    <article class="credential" id="credential" aria-label="Vista previa de la credencial">
+                        <img class="credential-background" src="Fondo.jpg" alt="">
+                        <div class="credential-shade" aria-hidden="true"></div>
+                        <div class="credential-glow" aria-hidden="true"></div>
+                        <div class="credential-grid" aria-hidden="true"></div>
+
+                        <header class="credential-header">
+                            <img src="irf-wordmark.png" alt="Impact Regional Fellowship 2026">
+                            <span>BECARIO/A · 2026</span>
+                        </header>
+
+                        <p class="credential-message">EMPIEZA MI VIAJE EN EL <b>IRF'26</b></p>
+
+                        <div class="portrait-ring">
+                            <div class="portrait" id="portrait">
+                                <div class="portrait-placeholder" id="portrait-placeholder">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21a8 8 0 0 1 16 0M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg>
+                                    <span>Tu foto</span>
+                                </div>
+                                <img id="portrait-image" alt="Fotografía de perfil" hidden>
+                            </div>
+                        </div>
+
+                        <div class="credential-data">
+                            <span class="credential-role">TALENTO REGIONAL</span>
+                            <h3 id="preview-name">Nombre Apellido</h3>
+                            <p>Representando a <strong id="preview-region">tu región</strong></p>
+                            <div class="credential-tag"><i></i> #ElTalentoNaceEnLasRegiones</div>
+                        </div>
+
+                        <footer class="credential-footer">
+                            <span>IMPACT REGIONAL FELLOWSHIP</span>
+                            <span>SPINOUT · PERÚ</span>
+                        </footer>
+                    </article>
+                </div>
+
+                <p class="preview-tip">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9 2 12l3 3m4-10 3-3 3 3m4 4 3 3-3 3M9 19l3 3 3-3M2 12h20M12 2v20"/></svg>
+                    Arrastra la fotografía para encontrar el mejor encuadre.
+                </p>
             </div>
+        </section>
 
-            <div class="form-grupo">
-                <label>Región</label>
-                <input type="text" id="input-region" placeholder="Ej. Región" oninput="actualizarTexto('input-region', 'render-region-span', 'Región')">
-            </div>
+        <section class="help-strip" aria-label="Consejos para una buena credencial">
+            <div class="help-title"><span>03</span><h2>Antes de compartir</h2></div>
+            <ul>
+                <li><i>1</i><span><strong>Foto frontal</strong>Usa buena iluminación.</span></li>
+                <li><i>2</i><span><strong>Revisa tus datos</strong>Confirma nombre y región.</span></li>
+                <li><i>3</i><span><strong>Comparte tu logro</strong>Publícala en tus redes.</span></li>
+            </ul>
+        </section>
+    </main>
 
-            <div class="form-grupo">
-                <label>Foto de Perfil</label>
-                <input type="file" id="input-foto" accept="image/*" onchange="cargarFoto(event)">
-            </div>
+    <footer class="site-footer">
+        <img src="irf-logo.png" alt="IRF26">
+        <p>Impact Regional Fellowship 2026 · El talento nace en las regiones.</p>
+    </footer>
 
-            <button class="btn-generar" id="btn-descarga" onclick="descargarCredencial()">⬇ Descargar Imagen</button>
-        </div>
-
+    <div class="toast" id="toast" role="status" aria-live="polite">
+        <span class="toast-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+        </span>
+        <div><strong id="toast-title">¡Credencial lista!</strong><p id="toast-message">Ya puedes compartirla con tu comunidad.</p></div>
     </div>
 
-    <script>
-        function actualizarTexto(idInput, idRender, textoPorDefecto) {
-            const texto = document.getElementById(idInput).value;
-            document.getElementById(idRender).innerText = texto || textoPorDefecto; 
-        }
-
-        function cargarFoto(event) {
-            const archivo = event.target.files[0];
-            if (archivo) {
-                const lector = new FileReader();
-                lector.onload = function(e) {
-                    // Ahora se inyecta directamente el archivo al src de la imagen
-                    document.getElementById('render-foto').src = e.target.result;
-                }
-                lector.readAsDataURL(archivo);
-            }
-        }
-
-        function descargarCredencial() {
-            const boton = document.getElementById('btn-descarga');
-            const nodoCredencial = document.getElementById('credencial-final');
-            
-            boton.innerText = "Generando...";
-            boton.disabled = true;
-
-            html2canvas(nodoCredencial, { 
-                scale: 3, 
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#000000' 
-            }).then(canvas => {
-                try {
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.95); 
-                    const enlace = document.createElement('a');
-                    enlace.download = 'IRF2026-Talento.jpg';
-                    enlace.href = dataUrl;
-                    enlace.click();
-                    
-                    boton.innerText = "⬇ Descargar Imagen";
-                    boton.disabled = false;
-                } catch (error) {
-                    alert("⚠️ Aviso de Seguridad Local:\nEl código funciona perfectamente, pero tu navegador bloquea la descarga porque abriste el archivo con doble clic.\n\nSolución: Sube los archivos a GitHub/Vercel o usa un Live Server para probarlo.");
-                    boton.innerText = "⬇ Descargar Imagen";
-                    boton.disabled = false;
-                }
-            }).catch(err => {
-                alert("Ocurrió un error al procesar la imagen.");
-                boton.innerText = "⬇ Descargar Imagen";
-                boton.disabled = false;
-            });
-        }
-    </script>
+    <script src="app.js" defer></script>
 </body>
 </html>
