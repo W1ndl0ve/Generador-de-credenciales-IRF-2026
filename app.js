@@ -352,7 +352,7 @@
         context.fillRect(0, 0, 1200, 1200);
 
         const glow = context.createRadialGradient(600, 430, 40, 600, 430, 480);
-        glow.addColorStop(0, `${accent}30`);
+        glow.addColorStop(0, `${accent}18`);
         glow.addColorStop(1, `${accent}00`);
         context.fillStyle = glow;
         context.fillRect(0, 0, 1200, 850);
@@ -389,16 +389,12 @@
 
         context.save();
         context.shadowColor = `${accent}99`;
-        context.shadowBlur = 72;
+        context.shadowBlur = 54;
         context.beginPath();
-        context.arc(600, portraitCenterY, 254, 0, Math.PI * 2);
+        context.arc(600, portraitCenterY, 240, 0, Math.PI * 2);
         context.fillStyle = accent;
         context.fill();
         context.restore();
-        context.beginPath();
-        context.arc(600, portraitCenterY, 249, 0, Math.PI * 2);
-        context.fillStyle = accent;
-        context.fill();
 
         drawCanvasPhoto(context, portraitCenterY);
 
