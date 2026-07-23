@@ -653,6 +653,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
 .credential-data > p strong { color: var(--role-accent); font-weight: 700; }
 
 .credential-region {
+    gap: .22em;
     font-family: "Fraunces", Georgia, serif !important;
     font-weight: 700 !important;
     font-variation-settings: "SOFT" 100, "WONK" 1;
