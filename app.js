@@ -50,8 +50,8 @@
 
     const roles = {
         becario: { badge: "", accent: "#ffc400", file: "Becario" },
-        mentor: { badge: "MENTOR", accent: "#f2f4f7", file: "Mentor" },
-        organizador: { badge: "ORGANIZACIÓN", accent: "#5b9fe3", file: "Organizador" }
+        mentor: { badge: "MENTOR", accent: "#ffad55", file: "Mentor" },
+        organizador: { badge: "ORGANIZADOR", accent: "#ff856b", file: "Organizador" }
     };
 
     const supabaseClient = createSupabaseClient();
@@ -419,7 +419,7 @@
             context.fillText(region, regionStart + prefixWidth, 1017);
         } else {
             context.textAlign = "center";
-            context.font = "800 24px Fraunces, Georgia, serif";
+            context.font = "800 24px Montserrat, Arial, sans-serif";
             const membershipWidth = 300;
             roundedRect(context, 600 - membershipWidth / 2, 1001, membershipWidth, 56, 28);
             context.fillStyle = `${accent}12`;
