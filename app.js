@@ -8,6 +8,7 @@
         roles: [...document.querySelectorAll('input[name="role"]')],
         previewRole: $("#preview-role"),
         name: $("#name"),
+        regionField: $("#region-field"),
         region: $("#region"),
         photoInput: $("#photo"),
         nameCount: $("#name-count"),
@@ -48,9 +49,9 @@
     };
 
     const roles = {
-        becario: { badge: "COHORTE", accent: "#ffc83d", file: "Becario" },
+        becario: { badge: "", accent: "#ffc400", file: "Becario" },
         mentor: { badge: "MENTOR", accent: "#f2f4f7", file: "Mentor" },
-        organizador: { badge: "ORGANIZADOR", accent: "#5b9fe3", file: "Organizador" }
+        organizador: { badge: "ORGANIZACIÓN", accent: "#5b9fe3", file: "Organizador" }
     };
 
     const assets = {
@@ -83,8 +84,14 @@
 
     function updateRolePreview() {
         const role = selectedRole();
+        const usesRegion = role === "becario";
         elements.credential.dataset.role = role;
         elements.previewRole.textContent = roles[role].badge;
+        elements.previewRole.hidden = usesRegion;
+        elements.regionField.hidden = !usesRegion;
+        elements.region.disabled = !usesRegion;
+        elements.region.required = usesRegion;
+        if (!usesRegion) setError("region", "");
     }
 
     function setError(field, message) {
@@ -120,7 +127,7 @@
             setError("name", "");
         }
 
-        if (!region) {
+        if (selectedRole() === "becario" && !region) {
             setError("region", "Selecciona la región que representas.");
             valid = false;
         } else {
@@ -266,18 +273,18 @@
         context.restore();
     }
 
-    function drawCanvasPhoto(context) {
+    function drawCanvasPhoto(context, centerY) {
         const image = elements.portraitImage;
-        const size = 420;
+        const size = 498;
         const rendered = imageCoverSize(image, size, state.zoom);
         const previewSize = elements.portrait.clientWidth;
         const factor = size / previewSize;
         const x = 600 - rendered.width / 2 + state.offsetX * factor;
-        const y = 535 - rendered.height / 2 + state.offsetY * factor;
+        const y = centerY - rendered.height / 2 + state.offsetY * factor;
 
         context.save();
         context.beginPath();
-        context.arc(600, 535, 210, 0, Math.PI * 2);
+        context.arc(600, centerY, 249, 0, Math.PI * 2);
         context.clip();
         context.drawImage(image, x, y, rendered.width, rendered.height);
         context.restore();
@@ -286,6 +293,7 @@
     async function renderCredential() {
         const role = selectedRole();
         const accent = roles[role].accent;
+        const portraitCenterY = 600;
         await Promise.all([
             waitForImage(assets.background),
             waitForImage(assets.wordmark),
@@ -334,106 +342,88 @@
 
         context.fillStyle = accent;
         context.fillRect(0, 0, 408, 7);
-        context.drawImage(assets.wordmark, 72, 66, 384, 108);
-
-        context.font = "800 18px Montserrat, Arial, sans-serif";
-        const badgeWidth = Math.max(170, context.measureText(roles[role].badge).width + 76);
-        const badgeX = 1128 - badgeWidth;
-        roundedRect(context, badgeX, 78, badgeWidth, 54, 27);
-        context.fillStyle = "rgba(10,10,10,.58)";
-        context.fill();
-        context.strokeStyle = accent;
-        context.lineWidth = 2;
-        context.stroke();
-        context.fillStyle = accent;
-        context.textAlign = "center";
-        context.textBaseline = "middle";
-        context.font = "800 18px Montserrat, Arial, sans-serif";
-        context.fillText(roles[role].badge, badgeX + badgeWidth / 2, 106);
+        context.drawImage(assets.wordmark, 408, 66, 384, 108);
 
         context.save();
         context.fillStyle = accent;
         context.shadowColor = "rgba(0,0,0,.75)";
         context.shadowBlur = 10;
-        context.font = "700 29px Montserrat, Arial, sans-serif";
-        drawCurvedText(context, "¡Empieza mi viaje en el IRF26!", 600, 535, 270);
+        context.font = role === "becario"
+            ? "700 30px Georgia, serif"
+            : "700 29px Montserrat, Arial, sans-serif";
+        drawCurvedText(context, "Empieza mi viaje en el IRF26", 600, portraitCenterY, 300);
         context.restore();
 
         context.save();
         context.shadowColor = `${accent}99`;
         context.shadowBlur = 72;
         context.beginPath();
-        context.arc(600, 535, 231, 0, Math.PI * 2);
+        context.arc(600, portraitCenterY, 254, 0, Math.PI * 2);
         context.fillStyle = accent;
         context.fill();
         context.restore();
         context.beginPath();
-        context.arc(600, 535, 218, 0, Math.PI * 2);
-        context.fillStyle = "#0b0b0b";
+        context.arc(600, portraitCenterY, 249, 0, Math.PI * 2);
+        context.fillStyle = accent;
         context.fill();
 
-        drawCanvasPhoto(context);
+        drawCanvasPhoto(context, portraitCenterY);
 
         context.textAlign = "center";
         context.textBaseline = "middle";
-        context.fillStyle = "#ffffff";
-        context.font = "800 19px Montserrat, Arial, sans-serif";
-        context.fillText("TALENTO REGIONAL", 600, 813);
-
         context.fillStyle = accent;
         let nameSize = 60;
         do {
-            context.font = `900 ${nameSize}px Montserrat, Arial, sans-serif`;
+            context.font = role === "becario"
+                ? `700 ${nameSize}px Georgia, serif`
+                : `900 ${nameSize}px Montserrat, Arial, sans-serif`;
             if (context.measureText(cleanText(elements.name.value)).width <= 1060) break;
             nameSize -= 2;
         } while (nameSize > 38);
-        context.fillText(cleanText(elements.name.value), 600, 866);
+        context.fillText(cleanText(elements.name.value), 600, 950);
 
-        const prefix = "Representando a ";
-        const region = elements.region.value;
-        context.font = "400 27px Montserrat, Arial, sans-serif";
-        const prefixWidth = context.measureText(prefix).width;
-        context.font = "700 27px Montserrat, Arial, sans-serif";
-        const regionWidth = context.measureText(region).width;
-        const regionStart = 600 - (prefixWidth + regionWidth) / 2;
-        context.textAlign = "left";
-        context.fillStyle = "#ffffff";
-        context.font = "400 27px Montserrat, Arial, sans-serif";
-        context.fillText(prefix, regionStart, 928);
-        context.fillStyle = accent;
-        context.font = "700 27px Montserrat, Arial, sans-serif";
-        context.fillText(region, regionStart + prefixWidth, 928);
-
-        const tag = "#ElTalentoNaceEnLasRegiones";
-        context.font = "600 18px Montserrat, Arial, sans-serif";
-        const tagWidth = context.measureText(tag).width + 76;
-        roundedRect(context, 600 - tagWidth / 2, 974, tagWidth, 52, 26);
-        context.fillStyle = "rgba(255,255,255,.06)";
-        context.fill();
-        context.strokeStyle = "rgba(255,255,255,.16)";
-        context.lineWidth = 2;
-        context.stroke();
-        context.beginPath();
-        context.arc(600 - tagWidth / 2 + 27, 1000, 5, 0, Math.PI * 2);
-        context.fillStyle = accent;
-        context.fill();
-        context.textAlign = "left";
-        context.fillStyle = "#d1d1d5";
-        context.fillText(tag, 600 - tagWidth / 2 + 46, 1000);
+        if (role === "becario") {
+            const prefix = "El talento nace en ";
+            const region = `#${elements.region.value}`;
+            context.font = "700 29px Georgia, serif";
+            const prefixWidth = context.measureText(prefix).width;
+            const regionWidth = context.measureText(region).width;
+            const regionStart = 600 - (prefixWidth + regionWidth) / 2;
+            context.textAlign = "left";
+            context.fillStyle = "#ffffff";
+            context.fillText(prefix, regionStart, 1035);
+            context.fillStyle = accent;
+            context.fillText(region, regionStart + prefixWidth, 1035);
+        } else {
+            context.textAlign = "center";
+            context.font = "800 22px Montserrat, Arial, sans-serif";
+            const membershipWidth = Math.max(210, context.measureText(roles[role].badge).width + 92);
+            roundedRect(context, 600 - membershipWidth / 2, 1007, membershipWidth, 56, 28);
+            context.fillStyle = `${accent}12`;
+            context.fill();
+            context.strokeStyle = accent;
+            context.lineWidth = 2;
+            context.stroke();
+            context.fillStyle = accent;
+            context.shadowColor = `${accent}33`;
+            context.shadowBlur = 16;
+            context.fillText(roles[role].badge, 600, 1035);
+            context.shadowBlur = 0;
+        }
 
         context.strokeStyle = "rgba(255,255,255,.13)";
         context.lineWidth = 1;
         context.beginPath();
-        context.moveTo(60, 1100);
-        context.lineTo(1140, 1100);
+        context.moveTo(60, 1120);
+        context.lineTo(1140, 1120);
         context.stroke();
         context.fillStyle = "#73737c";
         context.font = "700 17px Montserrat, Arial, sans-serif";
         context.textBaseline = "alphabetic";
         context.textAlign = "left";
-        context.fillText("IMPACT REGIONAL FELLOWSHIP", 60, 1148);
+        context.fillText("IMPACT REGIONAL FELLOWSHIP", 60, 1170);
         context.textAlign = "right";
-        context.fillText("SPINOUT · PERÚ", 1140, 1148);
+        context.fillText("SPINOUT · PERÚ", 1140, 1170);
 
         return canvas;
     }

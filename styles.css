@@ -207,6 +207,7 @@ form { min-width: 0; }
 
 .form-grid { display: grid; gap: 19px; }
 .field { display: grid; gap: 8px; }
+.field[hidden] { display: none; }
 
 .role-field {
     min-width: 0;
@@ -511,7 +512,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
 }
 
 .credential {
-    --role-accent: #ffc83d;
+    --role-accent: #ffc400;
     position: relative;
     width: 100%;
     overflow: hidden;
@@ -566,22 +567,11 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
     left: 6%;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 5%;
 }
 
 .credential-header img { width: 32%; height: auto; }
-
-.credential-header span {
-    padding: 1.4% 2.35%;
-    color: var(--role-accent);
-    border: 1px solid var(--role-accent);
-    border-radius: 999px;
-    background: rgba(10, 10, 10, .48);
-    font-size: clamp(5px, 1.6cqw, 10px);
-    font-weight: 800;
-    letter-spacing: .13em;
-}
 
 .credential-arc {
     position: absolute;
@@ -590,6 +580,10 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
     height: 100%;
     overflow: visible;
     pointer-events: none;
+}
+
+.credential-arc {
+    transform: translateY(-5%);
 }
 
 .credential-arc path { fill: none; }
@@ -602,31 +596,37 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
     text-shadow: 0 2px 10px rgba(0, 0, 0, .86), 0 0 12px color-mix(in srgb, var(--role-accent) 24%, transparent);
 }
 
+.credential[data-role="becario"] .credential-arc text {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    letter-spacing: .4px;
+}
+
 .portrait-ring {
     position: absolute;
-    top: 25.5%;
+    top: 28%;
     left: 50%;
-    width: 38.5%;
-    padding: 1%;
+    width: 43%;
+    padding: .45%;
     aspect-ratio: 1;
     border-radius: 50%;
     background: var(--role-accent);
     box-shadow:
         0 0 0 1px color-mix(in srgb, var(--role-accent) 45%, transparent),
-        0 0 22px color-mix(in srgb, var(--role-accent) 46%, transparent),
-        0 0 58px color-mix(in srgb, var(--role-accent) 26%, transparent);
+        0 0 18px color-mix(in srgb, var(--role-accent) 36%, transparent),
+        0 0 62px color-mix(in srgb, var(--role-accent) 30%, transparent);
     transform: translateX(-50%);
 }
 
 .portrait-ring::before {
     position: absolute;
-    inset: -6%;
+    inset: -8%;
     z-index: -1;
     content: "";
     border-radius: 50%;
     background: var(--role-accent);
-    filter: blur(24px);
-    opacity: .28;
+    filter: blur(30px);
+    opacity: .25;
 }
 
 .portrait {
@@ -674,22 +674,14 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
 
 .credential-data {
     position: absolute;
-    top: 67%;
+    top: 74.5%;
     right: 5%;
     left: 5%;
     text-align: center;
 }
 
-.credential-role {
-    display: inline-block;
-    color: #fff;
-    font-size: clamp(6px, 1.65cqw, 9px);
-    font-weight: 800;
-    letter-spacing: .22em;
-}
-
 .credential-data h3 {
-    margin: 1.2% 0 .5%;
+    margin: 0 0 1.1%;
     padding: 0 1% .16em;
     color: var(--role-accent);
     font-family: "Montserrat", sans-serif;
@@ -698,6 +690,12 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
     letter-spacing: -.035em;
     line-height: 1.18;
     white-space: nowrap;
+}
+
+.credential[data-role="becario"] .credential-data h3 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    letter-spacing: -.025em;
 }
 
 .credential-data > p {
@@ -710,27 +708,38 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
 
 .credential-data > p strong { color: var(--role-accent); font-weight: 700; }
 
-.credential-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 3.2%;
-    padding: 1.5% 2.3%;
-    color: #d1d1d5;
-    border: 1px solid rgba(255, 255, 255, .14);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, .055);
-    backdrop-filter: blur(7px);
-    font-size: clamp(5px, 1.5cqw, 9px);
-    font-weight: 600;
+.credential-region {
+    font-family: Georgia, "Times New Roman", serif !important;
+    font-weight: 700 !important;
 }
 
-.credential-tag i { width: 5px; height: 5px; border-radius: 50%; background: var(--role-accent); box-shadow: 0 0 8px var(--role-accent); }
+.credential:not([data-role="becario"]) .credential-region { display: none; }
+
+.credential-membership {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24%;
+    margin: 2.4% auto 0 !important;
+    padding: 1.15% 3.2%;
+    color: var(--role-accent) !important;
+    border: 1px solid var(--role-accent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--role-accent) 7%, rgba(8, 8, 8, .72));
+    box-shadow: 0 0 18px color-mix(in srgb, var(--role-accent) 13%, transparent);
+    font-family: "Montserrat", sans-serif !important;
+    font-size: clamp(7px, 1.85cqw, 11px) !important;
+    font-weight: 800 !important;
+    line-height: 1;
+    letter-spacing: .14em;
+}
+
+.credential-membership[hidden] { display: none; }
 
 .credential-footer {
     position: absolute;
     right: 5%;
-    bottom: 4.4%;
+    bottom: 2.4%;
     left: 5%;
     display: flex;
     justify-content: space-between;

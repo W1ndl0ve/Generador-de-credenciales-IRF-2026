@@ -89,7 +89,7 @@
                             <p class="field-error" id="name-error"></p>
                         </div>
 
-                        <div class="field">
+                        <div class="field" id="region-field">
                             <label for="region">Región que representas</label>
                             <div class="select-wrap">
                                 <select id="region" name="region" required>
@@ -188,12 +188,11 @@
 
                         <header class="credential-header">
                             <img src="irf-wordmark.png" alt="Impact Regional Fellowship 2026">
-                            <span id="preview-role">COHORTE</span>
                         </header>
 
                         <svg class="credential-arc" viewBox="0 0 1200 1200" aria-hidden="true">
-                            <defs><path id="journey-arc" d="M 346 443 A 270 270 0 0 1 854 443"/></defs>
-                            <text><textPath href="#journey-arc" startOffset="50%" text-anchor="middle">¡Empieza mi viaje en el IRF26!</textPath></text>
+                            <defs><path id="journey-arc" d="M 330 525 A 290 290 0 0 1 870 525"/></defs>
+                            <text><textPath href="#journey-arc" startOffset="50%" text-anchor="middle">Empieza mi viaje en el IRF26</textPath></text>
                         </svg>
 
                         <div class="portrait-ring">
@@ -207,10 +206,9 @@
                         </div>
 
                         <div class="credential-data">
-                            <span class="credential-role">TALENTO REGIONAL</span>
                             <h3 id="preview-name">Nombre Apellido</h3>
-                            <p>Representando a <strong id="preview-region">tu región</strong></p>
-                            <div class="credential-tag"><i></i> #ElTalentoNaceEnLasRegiones</div>
+                            <p class="credential-region">El talento nace en <strong>#<span id="preview-region">tu región</span></strong></p>
+                            <p class="credential-membership" id="preview-role" hidden>MENTOR</p>
                         </div>
 
                         <footer class="credential-footer">
