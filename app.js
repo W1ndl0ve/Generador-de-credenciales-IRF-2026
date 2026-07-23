@@ -381,15 +381,13 @@
         context.fillStyle = accent;
         context.shadowColor = "rgba(0,0,0,.75)";
         context.shadowBlur = 10;
-        context.font = role === "becario"
-            ? "700 34px Georgia, serif"
-            : "700 34px Montserrat, Arial, sans-serif";
+        context.font = "700 34px Fraunces, Georgia, serif";
         drawCurvedText(context, "Empieza mi viaje en el IRF26", 600, portraitCenterY - 14, 300);
         context.restore();
 
         context.save();
         context.shadowColor = `${accent}99`;
-        context.shadowBlur = 54;
+        context.shadowBlur = 60;
         context.beginPath();
         context.arc(600, portraitCenterY, 238, 0, Math.PI * 2);
         context.fillStyle = accent;
@@ -403,9 +401,7 @@
         context.fillStyle = accent;
         let nameSize = 58;
         do {
-            context.font = role === "becario"
-                ? `700 ${nameSize}px Georgia, serif`
-                : `900 ${nameSize}px Montserrat, Arial, sans-serif`;
+            context.font = `900 ${nameSize}px Fraunces, Georgia, serif`;
             if (context.measureText(cleanText(elements.name.value)).width <= 1060) break;
             nameSize -= 2;
         } while (nameSize > 38);
@@ -414,7 +410,7 @@
         if (role === "becario") {
             const prefix = "El talento nace en ";
             const region = `#${elements.region.value}`;
-            context.font = "700 38px Georgia, serif";
+            context.font = "700 38px Fraunces, Georgia, serif";
             const prefixWidth = context.measureText(prefix).width;
             const regionWidth = context.measureText(region).width;
             const regionStart = 600 - (prefixWidth + regionWidth) / 2;
@@ -425,7 +421,7 @@
             context.fillText(region, regionStart + prefixWidth, 1050);
         } else {
             context.textAlign = "center";
-            context.font = "800 22px Montserrat, Arial, sans-serif";
+            context.font = "800 22px Fraunces, Georgia, serif";
             const membershipWidth = Math.max(210, context.measureText(roles[role].badge).width + 92);
             roundedRect(context, 600 - membershipWidth / 2, 1022, membershipWidth, 56, 28);
             context.fillStyle = `${accent}12`;
