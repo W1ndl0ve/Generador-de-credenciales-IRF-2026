@@ -373,8 +373,6 @@
         }
         context.restore();
 
-        context.fillStyle = accent;
-        context.fillRect(396, 1193, 408, 7);
         context.drawImage(assets.wordmark, 390, 120, 420, 118);
 
         context.save();
