@@ -289,7 +289,7 @@
 
     function drawCanvasPhoto(context, centerY) {
         const image = elements.portraitImage;
-        const size = 498;
+        const size = 494;
         const rendered = imageCoverSize(image, size, state.zoom);
         const previewSize = elements.portrait.clientWidth;
         const factor = size / previewSize;
@@ -298,7 +298,7 @@
 
         context.save();
         context.beginPath();
-        context.arc(600, centerY, 249, 0, Math.PI * 2);
+        context.arc(600, centerY, 247, 0, Math.PI * 2);
         context.clip();
         context.drawImage(image, x, y, rendered.width, rendered.height);
         context.restore();
@@ -326,7 +326,7 @@
     async function renderCredential() {
         const role = selectedRole();
         const accent = roles[role].accent;
-        const portraitCenterY = 600;
+        const portraitCenterY = 636;
         await Promise.all([
             waitForImage(assets.background),
             waitForImage(assets.wordmark),
@@ -351,7 +351,7 @@
         context.fillStyle = shade;
         context.fillRect(0, 0, 1200, 1200);
 
-        const glow = context.createRadialGradient(600, 430, 40, 600, 430, 480);
+        const glow = context.createRadialGradient(600, 625, 40, 600, 625, 480);
         glow.addColorStop(0, `${accent}18`);
         glow.addColorStop(1, `${accent}00`);
         context.fillStyle = glow;
@@ -374,24 +374,24 @@
         context.restore();
 
         context.fillStyle = accent;
-        context.fillRect(396, 0, 408, 7);
-        context.drawImage(assets.wordmark, 408, 66, 384, 108);
+        context.fillRect(396, 1193, 408, 7);
+        context.drawImage(assets.wordmark, 390, 120, 420, 118);
 
         context.save();
         context.fillStyle = accent;
         context.shadowColor = "rgba(0,0,0,.75)";
         context.shadowBlur = 10;
         context.font = role === "becario"
-            ? "700 30px Georgia, serif"
-            : "700 29px Montserrat, Arial, sans-serif";
-        drawCurvedText(context, "Empieza mi viaje en el IRF26", 600, portraitCenterY, 300);
+            ? "700 34px Georgia, serif"
+            : "700 34px Montserrat, Arial, sans-serif";
+        drawCurvedText(context, "Empieza mi viaje en el IRF26", 600, portraitCenterY - 14, 300);
         context.restore();
 
         context.save();
         context.shadowColor = `${accent}99`;
         context.shadowBlur = 54;
         context.beginPath();
-        context.arc(600, portraitCenterY, 240, 0, Math.PI * 2);
+        context.arc(600, portraitCenterY, 238, 0, Math.PI * 2);
         context.fillStyle = accent;
         context.fill();
         context.restore();
@@ -401,7 +401,7 @@
         context.textAlign = "center";
         context.textBaseline = "middle";
         context.fillStyle = accent;
-        let nameSize = 60;
+        let nameSize = 58;
         do {
             context.font = role === "becario"
                 ? `700 ${nameSize}px Georgia, serif`
@@ -409,25 +409,25 @@
             if (context.measureText(cleanText(elements.name.value)).width <= 1060) break;
             nameSize -= 2;
         } while (nameSize > 38);
-        context.fillText(cleanText(elements.name.value), 600, 950);
+        context.fillText(cleanText(elements.name.value), 600, 971);
 
         if (role === "becario") {
             const prefix = "El talento nace en ";
             const region = `#${elements.region.value}`;
-            context.font = "700 29px Georgia, serif";
+            context.font = "700 38px Georgia, serif";
             const prefixWidth = context.measureText(prefix).width;
             const regionWidth = context.measureText(region).width;
             const regionStart = 600 - (prefixWidth + regionWidth) / 2;
             context.textAlign = "left";
             context.fillStyle = "#ffffff";
-            context.fillText(prefix, regionStart, 1035);
+            context.fillText(prefix, regionStart, 1050);
             context.fillStyle = accent;
-            context.fillText(region, regionStart + prefixWidth, 1035);
+            context.fillText(region, regionStart + prefixWidth, 1050);
         } else {
             context.textAlign = "center";
             context.font = "800 22px Montserrat, Arial, sans-serif";
             const membershipWidth = Math.max(210, context.measureText(roles[role].badge).width + 92);
-            roundedRect(context, 600 - membershipWidth / 2, 1007, membershipWidth, 56, 28);
+            roundedRect(context, 600 - membershipWidth / 2, 1022, membershipWidth, 56, 28);
             context.fillStyle = `${accent}12`;
             context.fill();
             context.strokeStyle = accent;
@@ -436,7 +436,7 @@
             context.fillStyle = accent;
             context.shadowColor = `${accent}33`;
             context.shadowBlur = 16;
-            context.fillText(roles[role].badge, 600, 1035);
+            context.fillText(roles[role].badge, 600, 1050);
             context.shadowBlur = 0;
         }
 
