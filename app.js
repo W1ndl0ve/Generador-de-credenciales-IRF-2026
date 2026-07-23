@@ -374,7 +374,7 @@
         context.restore();
 
         context.fillStyle = accent;
-        context.fillRect(0, 0, 408, 7);
+        context.fillRect(396, 0, 408, 7);
         context.drawImage(assets.wordmark, 408, 66, 384, 108);
 
         context.save();
@@ -443,20 +443,6 @@
             context.fillText(roles[role].badge, 600, 1035);
             context.shadowBlur = 0;
         }
-
-        context.strokeStyle = "rgba(255,255,255,.13)";
-        context.lineWidth = 1;
-        context.beginPath();
-        context.moveTo(60, 1120);
-        context.lineTo(1140, 1120);
-        context.stroke();
-        context.fillStyle = "#73737c";
-        context.font = "700 17px Montserrat, Arial, sans-serif";
-        context.textBaseline = "alphabetic";
-        context.textAlign = "left";
-        context.fillText("IMPACT REGIONAL FELLOWSHIP", 60, 1170);
-        context.textAlign = "right";
-        context.fillText("SPINOUT · PERÚ", 1140, 1170);
 
         return canvas;
     }
