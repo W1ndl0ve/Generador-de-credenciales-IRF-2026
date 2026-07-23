@@ -54,10 +54,24 @@
         organizador: { badge: "ORGANIZACIÓN", accent: "#5b9fe3", file: "Organizador" }
     };
 
+    const supabaseClient = createSupabaseClient();
+
     const assets = {
         background: loadAsset("Fondo.jpg"),
         wordmark: loadAsset("irf-wordmark.png")
     };
+
+    function createSupabaseClient() {
+        const config = window.IRF_SUPABASE_CONFIG;
+        if (!config?.url || !config?.publishableKey || !window.supabase?.createClient) return null;
+        return window.supabase.createClient(config.url, config.publishableKey, {
+            auth: {
+                autoRefreshToken: false,
+                persistSession: false,
+                detectSessionInUrl: false
+            }
+        });
+    }
 
     function loadAsset(source) {
         const image = new Image();
@@ -290,6 +304,25 @@
         context.restore();
     }
 
+    function renderStoredPhoto() {
+        const canvas = document.createElement("canvas");
+        canvas.width = 800;
+        canvas.height = 800;
+        const context = canvas.getContext("2d", { alpha: false });
+        const image = elements.portraitImage;
+        const rendered = imageCoverSize(image, 800, state.zoom);
+        const factor = 800 / elements.portrait.clientWidth;
+        const x = 400 - rendered.width / 2 + state.offsetX * factor;
+        const y = 400 - rendered.height / 2 + state.offsetY * factor;
+
+        context.imageSmoothingEnabled = true;
+        context.imageSmoothingQuality = "high";
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, 800, 800);
+        context.drawImage(image, x, y, rendered.width, rendered.height);
+        return canvas;
+    }
+
     async function renderCredential() {
         const role = selectedRole();
         const accent = roles[role].accent;
@@ -428,10 +461,70 @@
         return canvas;
     }
 
-    function canvasToBlob(canvas) {
+    function canvasToBlob(canvas, type = "image/png", quality) {
         return new Promise((resolve, reject) => {
-            canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("No se pudo crear el archivo.")), "image/png");
+            canvas.toBlob(
+                blob => blob ? resolve(blob) : reject(new Error("No se pudo crear el archivo.")),
+                type,
+                quality
+            );
         });
+    }
+
+    async function compressedWebp(canvas, maxBytes, qualities) {
+        for (const quality of qualities) {
+            const blob = await canvasToBlob(canvas, "image/webp", quality);
+            if (blob.type !== "image/webp") {
+                throw new Error("Este navegador no permite optimizar imágenes WebP.");
+            }
+            if (blob.size <= maxBytes) return blob;
+        }
+        throw new Error("No se pudo comprimir la imagen dentro del límite permitido.");
+    }
+
+    async function uploadImage(bucket, path, blob) {
+        const { error } = await supabaseClient.storage
+            .from(bucket)
+            .upload(path, blob, {
+                cacheControl: "31536000",
+                contentType: "image/webp",
+                upsert: false
+            });
+        if (error) throw error;
+    }
+
+    async function saveSubmission(credentialCanvas) {
+        if (!supabaseClient) throw new Error("Supabase no está disponible.");
+
+        const id = crypto.randomUUID();
+        const role = selectedRole();
+        const photoPath = `${role}/${id}/photo.webp`;
+        const credentialPath = `${role}/${id}/credencial.webp`;
+        const photoCanvas = renderStoredPhoto();
+        const [photoBlob, credentialBlob] = await Promise.all([
+            compressedWebp(photoCanvas, 1024 * 1024, [.82, .76, .7, .64]),
+            compressedWebp(credentialCanvas, 1536 * 1024, [.86, .82, .78, .72])
+        ]);
+
+        await Promise.all([
+            uploadImage("irf-photos", photoPath, photoBlob),
+            uploadImage("irf-credentials", credentialPath, credentialBlob)
+        ]);
+
+        const { error } = await supabaseClient
+            .from("credential_records")
+            .insert({
+                id,
+                full_name: cleanText(elements.name.value),
+                role,
+                region: role === "becario" ? elements.region.value : null,
+                photo_path: photoPath,
+                credential_path: credentialPath,
+                photo_bytes: photoBlob.size,
+                credential_bytes: credentialBlob.size
+            });
+        if (error) throw error;
+        return id;
     }
 
     function safeFileName() {
@@ -446,7 +539,7 @@
         state.busy = busy;
         elements.download.disabled = busy;
         const label = elements.download.querySelector("span");
-        label.textContent = busy ? "Generando imagen…" : "Descargar credencial";
+        label.textContent = busy ? "Guardando y generando…" : "Descargar credencial";
     }
 
     function showToast(title, message) {
@@ -457,9 +550,8 @@
         state.toastTimer = window.setTimeout(() => elements.toast.classList.remove("is-visible"), 3600);
     }
 
-    async function makeFile() {
-        const canvas = await renderCredential();
-        const blob = await canvasToBlob(canvas);
+    async function makeFile(canvas) {
+        const blob = await canvasToBlob(canvas, "image/png");
         return new File([blob], `IRF26-${roles[selectedRole()].file}-${safeFileName()}.png`, { type: "image/png" });
     }
 
@@ -467,7 +559,9 @@
         if (state.busy || !validateForm()) return;
         setBusy(true);
         try {
-            const file = await makeFile();
+            const canvas = await renderCredential();
+            await saveSubmission(canvas);
+            const file = await makeFile(canvas);
             const url = URL.createObjectURL(file);
             const link = document.createElement("a");
             link.href = url;
@@ -476,9 +570,10 @@
             link.click();
             link.remove();
             window.setTimeout(() => URL.revokeObjectURL(url), 1500);
-            showToast("¡Credencial lista!", "Se descargó en alta resolución y ya puedes compartirla.");
+            showToast("¡Guardada y descargada!", "Tu registro quedó archivado y el PNG está listo para compartir.");
         } catch (error) {
-            showToast("No pudimos descargarla", "Recarga la página e inténtalo nuevamente.");
+            console.error("No se pudo guardar la credencial:", error);
+            showToast("No pudimos guardarla", "Revisa tu conexión e inténtalo otra vez. La descarga no se realizó.");
         } finally {
             setBusy(false);
         }
