@@ -58,7 +58,7 @@
 
     const assets = {
         background: loadAsset("Fondo.jpg"),
-        wordmark: loadAsset("irf-wordmark.png")
+        wordmark: loadAsset("logo_Arriba_crendenciales.png")
     };
 
     function createSupabaseClient() {
@@ -123,7 +123,7 @@
         const name = cleanText(elements.name.value);
         const region = elements.region.value;
         elements.previewName.textContent = name || "Nombre Apellido";
-        elements.previewRegion.textContent = region || "tu región";
+        elements.previewRegion.textContent = region || "Mi región";
         elements.nameCount.textContent = elements.name.value.length;
         if (name) setError("name", "");
         if (region) setError("region", "");
@@ -373,7 +373,7 @@
         }
         context.restore();
 
-        context.drawImage(assets.wordmark, 372, 115, 456, 128);
+        context.drawImage(assets.wordmark, 110, 450, 980, 300, 410, 118, 380, 116);
 
         context.save();
         context.fillStyle = accent;
@@ -414,9 +414,9 @@
             const regionStart = 600 - (prefixWidth + regionWidth) / 2;
             context.textAlign = "left";
             context.fillStyle = "#ffffff";
-            context.fillText(prefix, regionStart, 1029);
+            context.fillText(prefix, regionStart, 1017);
             context.fillStyle = accent;
-            context.fillText(region, regionStart + prefixWidth, 1029);
+            context.fillText(region, regionStart + prefixWidth, 1017);
         } else {
             context.textAlign = "center";
             context.font = "800 24px Fraunces, Georgia, serif";
