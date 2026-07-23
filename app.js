@@ -421,8 +421,8 @@
             context.fillText(region, regionStart + prefixWidth, 1050);
         } else {
             context.textAlign = "center";
-            context.font = "800 22px Fraunces, Georgia, serif";
-            const membershipWidth = Math.max(210, context.measureText(roles[role].badge).width + 92);
+            context.font = "800 24px Fraunces, Georgia, serif";
+            const membershipWidth = 300;
             roundedRect(context, 600 - membershipWidth / 2, 1022, membershipWidth, 56, 28);
             context.fillStyle = `${accent}12`;
             context.fill();
