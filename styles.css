@@ -500,7 +500,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
 .credential-glow {
     z-index: -3;
     background:
-        radial-gradient(circle at 50% 52%, color-mix(in srgb, var(--role-accent) 16%, transparent) 0, color-mix(in srgb, var(--role-accent) 7%, transparent) 24%, transparent 48%);
+        radial-gradient(circle at 50% 52%, color-mix(in srgb, var(--role-accent) 13%, transparent) 0, color-mix(in srgb, var(--role-accent) 5%, transparent) 24%, transparent 48%);
 }
 .credential-grid {
     z-index: -2;
@@ -521,7 +521,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
     gap: 5%;
 }
 
-.credential-header img { width: 40%; height: auto; }
+.credential-header img { width: 44%; height: auto; }
 
 .credential-arc {
     position: absolute;
@@ -536,7 +536,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
 .credential-arc text {
     fill: var(--role-accent);
     font-family: "Fraunces", Georgia, serif;
-    font-size: 34px;
+    font-size: 38px;
     font-weight: 700;
     font-variation-settings: "SOFT" 100, "WONK" 1;
     letter-spacing: .4px;
@@ -545,16 +545,16 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
 
 .portrait-ring {
     position: absolute;
-    top: 32.4%;
+    top: 33.5%;
     left: 50%;
-    width: 41.2%;
+    width: 38%;
     padding: 0;
     aspect-ratio: 1;
     border-radius: 50%;
     background: transparent;
     box-shadow:
-        0 0 32px color-mix(in srgb, var(--role-accent) 20%, transparent),
-        0 0 64px color-mix(in srgb, var(--role-accent) 14%, transparent);
+        0 0 30px color-mix(in srgb, var(--role-accent) 16%, transparent),
+        0 0 60px color-mix(in srgb, var(--role-accent) 10%, transparent);
     transform: translateX(-50%);
 }
 
@@ -566,7 +566,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
     border-radius: 50%;
     background: var(--role-accent);
     filter: blur(34px);
-    opacity: .14;
+    opacity: .1;
 }
 
 .portrait {
@@ -614,7 +614,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
 
 .credential-data {
     position: absolute;
-    top: 78.8%;
+    top: 77.1%;
     right: 5%;
     left: 5%;
     display: grid;
@@ -629,7 +629,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
     padding: 0 1% .16em;
     color: var(--role-accent);
     font-family: "Fraunces", Georgia, serif;
-    font-size: clamp(15px, 4.85cqw, 29px);
+    font-size: clamp(16px, 5.15cqw, 31px);
     font-weight: 900;
     font-variation-settings: "SOFT" 100, "WONK" 1;
     letter-spacing: -.025em;

@@ -289,7 +289,7 @@
 
     function drawCanvasPhoto(context, centerY) {
         const image = elements.portraitImage;
-        const size = 494;
+        const size = 456;
         const rendered = imageCoverSize(image, size, state.zoom);
         const previewSize = elements.portrait.clientWidth;
         const factor = size / previewSize;
@@ -298,7 +298,7 @@
 
         context.save();
         context.beginPath();
-        context.arc(600, centerY, 247, 0, Math.PI * 2);
+        context.arc(600, centerY, 228, 0, Math.PI * 2);
         context.clip();
         context.drawImage(image, x, y, rendered.width, rendered.height);
         context.restore();
@@ -326,7 +326,7 @@
     async function renderCredential() {
         const role = selectedRole();
         const accent = roles[role].accent;
-        const portraitCenterY = 636;
+        const portraitCenterY = 630;
         await Promise.all([
             waitForImage(assets.background),
             waitForImage(assets.wordmark),
@@ -373,21 +373,21 @@
         }
         context.restore();
 
-        context.drawImage(assets.wordmark, 390, 120, 420, 118);
+        context.drawImage(assets.wordmark, 372, 115, 456, 128);
 
         context.save();
         context.fillStyle = accent;
         context.shadowColor = "rgba(0,0,0,.75)";
         context.shadowBlur = 10;
-        context.font = "700 34px Fraunces, Georgia, serif";
+        context.font = "700 38px Fraunces, Georgia, serif";
         drawCurvedText(context, "Empieza mi viaje en el IRF26", 600, portraitCenterY - 14, 300);
         context.restore();
 
         context.save();
-        context.shadowColor = `${accent}99`;
-        context.shadowBlur = 60;
+        context.shadowColor = `${accent}66`;
+        context.shadowBlur = 50;
         context.beginPath();
-        context.arc(600, portraitCenterY, 238, 0, Math.PI * 2);
+        context.arc(600, portraitCenterY, 219, 0, Math.PI * 2);
         context.fillStyle = accent;
         context.fill();
         context.restore();
@@ -397,13 +397,13 @@
         context.textAlign = "center";
         context.textBaseline = "middle";
         context.fillStyle = accent;
-        let nameSize = 58;
+        let nameSize = 62;
         do {
             context.font = `900 ${nameSize}px Fraunces, Georgia, serif`;
             if (context.measureText(cleanText(elements.name.value)).width <= 1060) break;
             nameSize -= 2;
-        } while (nameSize > 38);
-        context.fillText(cleanText(elements.name.value), 600, 971);
+        } while (nameSize > 40);
+        context.fillText(cleanText(elements.name.value), 600, 950);
 
         if (role === "becario") {
             const prefix = "El talento nace en ";
@@ -414,14 +414,14 @@
             const regionStart = 600 - (prefixWidth + regionWidth) / 2;
             context.textAlign = "left";
             context.fillStyle = "#ffffff";
-            context.fillText(prefix, regionStart, 1050);
+            context.fillText(prefix, regionStart, 1029);
             context.fillStyle = accent;
-            context.fillText(region, regionStart + prefixWidth, 1050);
+            context.fillText(region, regionStart + prefixWidth, 1029);
         } else {
             context.textAlign = "center";
             context.font = "800 24px Fraunces, Georgia, serif";
             const membershipWidth = 300;
-            roundedRect(context, 600 - membershipWidth / 2, 1022, membershipWidth, 56, 28);
+            roundedRect(context, 600 - membershipWidth / 2, 1001, membershipWidth, 56, 28);
             context.fillStyle = `${accent}12`;
             context.fill();
             context.strokeStyle = accent;
@@ -430,7 +430,7 @@
             context.fillStyle = accent;
             context.shadowColor = `${accent}33`;
             context.shadowBlur = 16;
-            context.fillText(roles[role].badge, 600, 1050);
+            context.fillText(roles[role].badge, 600, 1029);
             context.shadowBlur = 0;
         }
 
