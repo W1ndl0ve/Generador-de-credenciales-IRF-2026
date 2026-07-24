@@ -420,9 +420,9 @@
         const nameLineHeight = nameFontSize * 1.18;
         const regionRowHeight = 1200 * 0.054;   // min-height: 5.4cqw = 64.8px
 
-        const nameBaseline = dataTop + nameLineHeight * 0.8;
-        const regionBaseline = nameBaseline + rowGap + regionRowHeight / 2 + regionFontSize * 0.35;
-        const regionY = regionBaseline + 8;
+        const nameBaseline = dataTop + nameLineHeight * 0.7;
+        const regionBaseline = dataTop + nameLineHeight + rowGap + regionRowHeight / 2 - 4;
+        const regionY = regionBaseline + 2;
 
         context.textAlign = "center";
         context.textBaseline = "middle";
