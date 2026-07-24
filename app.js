@@ -381,7 +381,7 @@
         context.fillStyle = accent;
         context.shadowColor = "rgba(0,0,0,.75)";
         context.shadowBlur = 10;
-        context.font = "600 38px Fraunces, Georgia, serif";
+        context.font = "600 38px \"Roca One\", \"Fraunces\", Georgia, serif";
         drawCurvedText(context, "Empieza mi viaje en el IRF26", 600, 578, 300);
         context.restore();
 
@@ -401,7 +401,7 @@
         context.fillStyle = accent;
         let nameSize = 60;
         do {
-            context.font = `600 ${nameSize}px Fraunces, Georgia, serif`;
+            context.font = `600 ${nameSize}px "Roca One", "Fraunces", Georgia, serif`;
             if (context.measureText(cleanText(elements.name.value)).width <= 1060) break;
             nameSize -= 2;
         } while (nameSize > 40);
@@ -410,21 +410,21 @@
         if (role === "becario") {
             const prefix = "El talento nace en ";
             const region = `#${elements.region.value}`;
-            context.font = "400 38px Fraunces, Georgia, serif";
+            context.font = "400 38px \"Roca One\", \"Fraunces\", Georgia, serif";
             const prefixWidth = context.measureText(prefix).width;
-            context.font = "600 38px Fraunces, Georgia, serif";
+            context.font = "600 38px \"Roca One\", \"Fraunces\", Georgia, serif";
             const regionWidth = context.measureText(region).width;
             const regionStart = 600 - (prefixWidth + regionWidth) / 2;
             context.textAlign = "left";
             context.fillStyle = "#ffffff";
-            context.font = "400 38px Fraunces, Georgia, serif";
+            context.font = "400 38px \"Roca One\", \"Fraunces\", Georgia, serif";
             context.fillText(prefix, regionStart, 990);
             context.fillStyle = accent;
-            context.font = "600 38px Fraunces, Georgia, serif";
+            context.font = "600 38px \"Roca One\", \"Fraunces\", Georgia, serif";
             context.fillText(region, regionStart + prefixWidth, 990);
         } else {
             context.textAlign = "center";
-            context.font = "700 24px Montserrat, Arial, sans-serif";
+            context.font = "700 24px \"Roca One\", \"Montserrat\", Arial, sans-serif";
             const membershipWidth = 300;
             roundedRect(context, 600 - membershipWidth / 2, 962, membershipWidth, 56, 28);
             context.fillStyle = `${accent}12`;
