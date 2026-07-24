@@ -452,7 +452,7 @@ if (role === "becario") {
             context.fillText(region, regionStart + prefixWidth, regionY);
         } else {
             context.textAlign = "center";
-            context.font = "700 24px \"Roca One\", \"Montserrat\", Arial, sans-serif";
+            context.font = "700 24px \"Montserrat\", Arial, sans-serif";
             const membershipWidth = 300;
             roundedRect(context, 600 - membershipWidth / 2, 962, membershipWidth, 56, 28);
             context.fillStyle = `${accent}12`;
