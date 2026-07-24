@@ -279,7 +279,7 @@
     }
 
     function drawCurvedText(context, text, centerX, centerY, radius) {
-        const spacing = 0.25;
+        const spacing = 1.5;
         const characters = [...text];
         const widths = characters.map(character => context.measureText(character).width + spacing);
         const totalAngle = widths.reduce((sum, width) => sum + width, 0) / radius;
@@ -414,7 +414,7 @@
 
         // Posiciones basadas en porcentajes del canvas (1200px) para igualar el CSS preview
         const dataTop = 1200 * 0.727;           // top: 72.7% = 872.4
-        const rowGap = 1200 * 0.008;            // row-gap: 0.8cqw ≈ 9.6px
+        const rowGap = 1200 * 0.015;            // row-gap: 1.5cqw ≈ 18px
         const nameFontSize = 1200 * 0.05;   // ≈ 60px — equivalente visual real, sin el tope de pantalla
         const regionFontSize = 1200 * 0.032; // ≈ 38.4px — equivalente visual real, sin el tope de pantalla
         const nameLineHeight = nameFontSize * 1.18;
@@ -434,17 +434,20 @@
         } while (nameSize > 40);
         context.fillText(cleanText(elements.name.value), 600, nameBaseline);
 
-        if (role === "becario") {
+if (role === "becario") {
             const prefix = "El talento nace en ";
             const region = `#${elements.region.value}`;
-            context.font = `700 ${regionFontSize}px "Roca One", "Fraunces", Georgia, serif`;
+            context.font = "400 38px \"Roca One\", \"Fraunces\", Georgia, serif";
             const prefixWidth = context.measureText(prefix).width;
+            context.font = "400 38px \"Roca One\", \"Fraunces\", Georgia, serif";
             const regionWidth = context.measureText(region).width;
             const regionStart = 600 - (prefixWidth + regionWidth) / 2;
             context.textAlign = "left";
             context.fillStyle = "#ffffff";
+            context.font = "400 38px \"Roca One\", \"Fraunces\", Georgia, serif";
             context.fillText(prefix, regionStart, regionBaseline);
             context.fillStyle = accent;
+            context.font = "400 38px \"Roca One\", \"Fraunces\", Georgia, serif";
             context.fillText(region, regionStart + prefixWidth, regionBaseline);
         } else {
             context.textAlign = "center";
