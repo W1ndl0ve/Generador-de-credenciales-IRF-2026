@@ -422,6 +422,7 @@
 
         const nameBaseline = dataTop + nameLineHeight * 0.8;
         const regionBaseline = nameBaseline + rowGap + regionRowHeight / 2 + regionFontSize * 0.35;
+        const regionY = regionBaseline + 8;
 
         context.textAlign = "center";
         context.textBaseline = "middle";
@@ -445,10 +446,10 @@ if (role === "becario") {
             context.textAlign = "left";
             context.fillStyle = "#ffffff";
             context.font = "400 38px \"Roca One\", \"Fraunces\", Georgia, serif";
-            context.fillText(prefix, regionStart, regionBaseline);
+            context.fillText(prefix, regionStart, regionY);
             context.fillStyle = accent;
             context.font = "400 38px \"Roca One\", \"Fraunces\", Georgia, serif";
-            context.fillText(region, regionStart + prefixWidth, regionBaseline);
+            context.fillText(region, regionStart + prefixWidth, regionY);
         } else {
             context.textAlign = "center";
             context.font = "700 24px \"Roca One\", \"Montserrat\", Arial, sans-serif";
