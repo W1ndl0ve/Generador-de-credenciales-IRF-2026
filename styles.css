@@ -500,7 +500,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
 .credential-glow {
     z-index: -3;
     background:
-        radial-gradient(circle at 50% 52%, color-mix(in srgb, var(--role-accent) 13%, transparent) 0, color-mix(in srgb, var(--role-accent) 5%, transparent) 24%, transparent 48%);
+        radial-gradient(circle at 50% 48.6%, color-mix(in srgb, var(--role-accent) 15%, transparent) 0, color-mix(in srgb, var(--role-accent) 6.5%, transparent) 27%, transparent 50%);
 }
 .credential-grid {
     z-index: -2;
@@ -522,9 +522,9 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
 }
 
 .credential-header img {
-    width: 46%;
+    width: 50%;
     height: auto;
-    transform: translateY(-37%);
+    transform: translateY(-48%);
 }
 
 .credential-arc {
@@ -549,28 +549,17 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
 
 .portrait-ring {
     position: absolute;
-    top: 33.5%;
+    top: 28%;
     left: 50%;
-    width: 38%;
+    width: 41.2%;
     padding: 0;
     aspect-ratio: 1;
     border-radius: 50%;
     background: transparent;
     box-shadow:
-        0 0 30px color-mix(in srgb, var(--role-accent) 16%, transparent),
-        0 0 60px color-mix(in srgb, var(--role-accent) 10%, transparent);
+        0 0 38px color-mix(in srgb, var(--role-accent) 18%, transparent),
+        0 0 76px color-mix(in srgb, var(--role-accent) 12%, transparent);
     transform: translateX(-50%);
-}
-
-.portrait-ring::before {
-    position: absolute;
-    inset: -8%;
-    z-index: -1;
-    content: "";
-    border-radius: 50%;
-    background: var(--role-accent);
-    filter: blur(34px);
-    opacity: .1;
 }
 
 .portrait {
@@ -618,7 +607,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
 
 .credential-data {
     position: absolute;
-    top: 77.1%;
+    top: 72.7%;
     right: 5%;
     left: 5%;
     display: grid;
@@ -633,7 +622,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
     padding: 0 1% .16em;
     color: var(--role-accent);
     font-family: "Fraunces", Georgia, serif;
-    font-size: clamp(16px, 5.15cqw, 31px);
+    font-size: clamp(16px, 5cqw, 30px);
     font-weight: 900;
     font-variation-settings: "SOFT" 100, "WONK" 1;
     letter-spacing: -.025em;
@@ -685,6 +674,17 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
 }
 
 .credential-membership[hidden] { display: none; }
+
+.credential-partners {
+    position: absolute;
+    top: 83.9%;
+    left: 50%;
+    width: 82.1%;
+    height: auto;
+    clip-path: inset(56.18% 1.34% 11.24% 1.26%);
+    transform: translateX(-50%);
+    pointer-events: none;
+}
 
 .preview-tip {
     display: flex;

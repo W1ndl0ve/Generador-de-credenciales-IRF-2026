@@ -58,7 +58,8 @@
 
     const assets = {
         background: loadAsset("Fondo.jpg"),
-        wordmark: loadAsset("logo_Arriba_crendenciales.png")
+        wordmark: loadAsset("logo_Arriba_crendenciales.png"),
+        partners: loadAsset("diseño_footer.png")
     };
 
     function createSupabaseClient() {
@@ -289,7 +290,7 @@
 
     function drawCanvasPhoto(context, centerY) {
         const image = elements.portraitImage;
-        const size = 456;
+        const size = 494;
         const rendered = imageCoverSize(image, size, state.zoom);
         const previewSize = elements.portrait.clientWidth;
         const factor = size / previewSize;
@@ -298,7 +299,7 @@
 
         context.save();
         context.beginPath();
-        context.arc(600, centerY, 228, 0, Math.PI * 2);
+        context.arc(600, centerY, 247, 0, Math.PI * 2);
         context.clip();
         context.drawImage(image, x, y, rendered.width, rendered.height);
         context.restore();
@@ -326,10 +327,11 @@
     async function renderCredential() {
         const role = selectedRole();
         const accent = roles[role].accent;
-        const portraitCenterY = 630;
+        const portraitCenterY = 583;
         await Promise.all([
             waitForImage(assets.background),
             waitForImage(assets.wordmark),
+            waitForImage(assets.partners),
             waitForImage(elements.portraitImage),
             document.fonts?.ready || Promise.resolve()
         ]);
@@ -373,21 +375,21 @@
         }
         context.restore();
 
-        context.drawImage(assets.wordmark, 110, 450, 980, 300, 410, 118, 380, 116);
+        context.drawImage(assets.wordmark, 110, 450, 980, 300, 390, 72, 420, 126);
 
         context.save();
         context.fillStyle = accent;
         context.shadowColor = "rgba(0,0,0,.75)";
         context.shadowBlur = 10;
         context.font = "700 38px Fraunces, Georgia, serif";
-        drawCurvedText(context, "Empieza mi viaje en el IRF26", 600, portraitCenterY - 14, 300);
+        drawCurvedText(context, "Empieza mi viaje en el IRF26", 600, 578, 300);
         context.restore();
 
         context.save();
-        context.shadowColor = `${accent}66`;
-        context.shadowBlur = 50;
+        context.shadowColor = `${accent}73`;
+        context.shadowBlur = 58;
         context.beginPath();
-        context.arc(600, portraitCenterY, 219, 0, Math.PI * 2);
+        context.arc(600, portraitCenterY, 238, 0, Math.PI * 2);
         context.fillStyle = accent;
         context.fill();
         context.restore();
@@ -397,13 +399,13 @@
         context.textAlign = "center";
         context.textBaseline = "middle";
         context.fillStyle = accent;
-        let nameSize = 62;
+        let nameSize = 60;
         do {
             context.font = `900 ${nameSize}px Fraunces, Georgia, serif`;
             if (context.measureText(cleanText(elements.name.value)).width <= 1060) break;
             nameSize -= 2;
         } while (nameSize > 40);
-        context.fillText(cleanText(elements.name.value), 600, 950);
+        context.fillText(cleanText(elements.name.value), 600, 911);
 
         if (role === "becario") {
             const prefix = "El talento nace en ";
@@ -414,14 +416,14 @@
             const regionStart = 600 - (prefixWidth + regionWidth) / 2;
             context.textAlign = "left";
             context.fillStyle = "#ffffff";
-            context.fillText(prefix, regionStart, 1017);
+            context.fillText(prefix, regionStart, 990);
             context.fillStyle = accent;
-            context.fillText(region, regionStart + prefixWidth, 1017);
+            context.fillText(region, regionStart + prefixWidth, 990);
         } else {
             context.textAlign = "center";
             context.font = "800 24px Montserrat, Arial, sans-serif";
             const membershipWidth = 300;
-            roundedRect(context, 600 - membershipWidth / 2, 1001, membershipWidth, 56, 28);
+            roundedRect(context, 600 - membershipWidth / 2, 962, membershipWidth, 56, 28);
             context.fillStyle = `${accent}12`;
             context.fill();
             context.strokeStyle = accent;
@@ -430,9 +432,11 @@
             context.fillStyle = accent;
             context.shadowColor = `${accent}33`;
             context.shadowBlur = 16;
-            context.fillText(roles[role].badge, 600, 1029);
+            context.fillText(roles[role].badge, 600, 990);
             context.shadowBlur = 0;
         }
+
+        context.drawImage(assets.partners, 17, 100, 1310, 58, 120, 1080, 960, 43);
 
         return canvas;
     }
