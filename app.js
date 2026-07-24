@@ -354,26 +354,10 @@
         context.fillRect(0, 0, 1200, 1200);
 
         const glow = context.createRadialGradient(600, 625, 40, 600, 625, 480);
-        glow.addColorStop(0, `${accent}18`);
+        glow.addColorStop(0, `${accent}22`);
         glow.addColorStop(1, `${accent}00`);
         context.fillStyle = glow;
-        context.fillRect(0, 0, 1200, 850);
-
-        context.save();
-        context.globalAlpha = .055;
-        context.strokeStyle = "#ffffff";
-        context.lineWidth = 1;
-        for (let line = 100; line < 1200; line += 100) {
-            context.beginPath();
-            context.moveTo(line, 0);
-            context.lineTo(line, 690);
-            context.stroke();
-            context.beginPath();
-            context.moveTo(0, line);
-            context.lineTo(1200, line);
-            context.stroke();
-        }
-        context.restore();
+        context.fillRect(0, 0, 1200, 1200);
 
         context.drawImage(assets.wordmark, 110, 450, 980, 300, 390, 72, 420, 126);
 
@@ -382,7 +366,6 @@
         context.shadowColor = "rgba(0,0,0,.75)";
         context.shadowBlur = 10;
         context.font = "300 38px \"Roca One\", \"Fraunces\", Georgia, serif";
-        drawCurvedText(context, "Empieza mi viaje en el IRF26", 600, 578, 300);
         context.restore();
 
         context.save();
@@ -401,7 +384,7 @@
         context.fillStyle = accent;
         let nameSize = 60;
         do {
-            context.font = `300 ${nameSize}px "Roca One", "Fraunces", Georgia, serif`;
+            context.font = `600 ${nameSize}px Fraunces, Georgia, serif`;
             if (context.measureText(cleanText(elements.name.value)).width <= 1060) break;
             nameSize -= 2;
         } while (nameSize > 40);
