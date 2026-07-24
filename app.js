@@ -452,13 +452,13 @@ if (role === "becario") {
             context.fillText(region, regionStart + prefixWidth, regionY);
         } else {
             context.textAlign = "center";
-            context.font = "700 24px \"Montserrat\", Arial, sans-serif";
-            const membershipWidth = 300;
+            context.font = "800 24px \"Montserrat\", Arial, sans-serif";
+            const membershipWidth = 340;
             roundedRect(context, 600 - membershipWidth / 2, 962, membershipWidth, 56, 28);
             context.fillStyle = `${accent}12`;
             context.fill();
             context.strokeStyle = accent;
-            context.lineWidth = 2;
+            context.lineWidth = 3;
             context.stroke();
             context.fillStyle = accent;
             context.shadowColor = `${accent}33`;
