@@ -202,14 +202,20 @@
 
     function loadPhoto(file) {
         setError("photo", "");
-        if (!file) return;
+        if (!file) {
+            setError("photo", "No se seleccionó ninguna imagen.");
+            return;
+        }
 
-        const accepted = ["image/jpeg", "image/png", "image/webp"];
-        if (!accepted.includes(file.type)) {
+        const accepted = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/pjpeg"];
+        const extensionAllowed = /\.(jpe?g|png|webp)$/i.test(file.name);
+        if (!accepted.includes(file.type) && !extensionAllowed) {
+            elements.photoInput.value = "";
             setError("photo", "Elige una imagen JPG, PNG o WEBP.");
             return;
         }
         if (file.size > 15 * 1024 * 1024) {
+            elements.photoInput.value = "";
             setError("photo", "La imagen supera los 15 MB. Elige una más ligera.");
             return;
         }
@@ -217,10 +223,12 @@
         const nextUrl = URL.createObjectURL(file);
         const probe = new Image();
         probe.onload = () => {
+            console.log("Probe loaded, size:", probe.naturalWidth, "x", probe.naturalHeight);
             if (state.photoUrl) URL.revokeObjectURL(state.photoUrl);
             state.photoUrl = nextUrl;
             state.photoFile = file;
             elements.portraitImage.onload = () => {
+                console.log("Portrait image loaded, size:", elements.portraitImage.naturalWidth, "x", elements.portraitImage.naturalHeight);
                 centerPhoto();
                 elements.portraitImage.hidden = false;
                 elements.portraitPlaceholder.hidden = true;
@@ -228,10 +236,15 @@
                 elements.uploadTitle.textContent = file.name;
                 elements.uploadHelp.textContent = `${fileSizeLabel(file.size)} · Lista para usar`;
             };
+            elements.portraitImage.onerror = (e) => {
+                console.error("Portrait image error:", e);
+                setError("photo", "No pudimos cargar la imagen en el preview.");
+            };
             elements.portraitImage.src = nextUrl;
         };
         probe.onerror = () => {
             URL.revokeObjectURL(nextUrl);
+            elements.photoInput.value = "";
             setError("photo", "No pudimos leer esa imagen. Prueba con otra.");
         };
         probe.src = nextUrl;
@@ -266,7 +279,7 @@
     }
 
     function drawCurvedText(context, text, centerX, centerY, radius) {
-        const spacing = 2;
+        const spacing = 0.25;
         const characters = [...text];
         const widths = characters.map(character => context.measureText(character).width + spacing);
         const totalAngle = widths.reduce((sum, width) => sum + width, 0) / radius;
@@ -328,11 +341,13 @@
         const role = selectedRole();
         const accent = roles[role].accent;
         const portraitCenterY = 583;
+        const fontLoad = document.fonts?.load('700 38px "Roca One"') || Promise.resolve();
         await Promise.all([
             waitForImage(assets.background),
             waitForImage(assets.wordmark),
             waitForImage(assets.partners),
             waitForImage(elements.portraitImage),
+            fontLoad,
             document.fonts?.ready || Promise.resolve()
         ]);
 
@@ -363,9 +378,27 @@
 
         context.save();
         context.fillStyle = accent;
-        context.shadowColor = "rgba(0,0,0,.75)";
+        context.shadowColor = "rgba(0,0,0,.86)";
         context.shadowBlur = 10;
-        context.font = "300 38px \"Roca One\", \"Fraunces\", Georgia, serif";
+        context.shadowOffsetX = 0;
+        context.shadowOffsetY = 2;
+        context.font = `700 38px "Roca One", "Fraunces", Georgia, serif`;
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        drawCurvedText(context, "Empieza mi viaje en el IRF26", 600, 579, 300);
+        context.restore();
+
+        context.save();
+        context.fillStyle = accent;
+        context.shadowColor = accent;
+        context.shadowBlur = 12;
+        context.shadowOffsetX = 0;
+        context.shadowOffsetY = 0;
+        context.globalAlpha = 0.24;
+        context.font = `700 38px "Roca One", "Fraunces", Georgia, serif`;
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        drawCurvedText(context, "Empieza mi viaje en el IRF26", 600, 579, 300);
         context.restore();
 
         context.save();
@@ -379,35 +412,43 @@
 
         drawCanvasPhoto(context, portraitCenterY);
 
+        // Posiciones basadas en porcentajes del canvas (1200px) para igualar el CSS preview
+        const dataTop = 1200 * 0.727;           // top: 72.7% = 872.4
+        const rowGap = 1200 * 0.008;            // row-gap: 0.8cqw ≈ 9.6px
+        const nameFontSize = 1200 * 0.05;   // ≈ 60px — equivalente visual real, sin el tope de pantalla
+        const regionFontSize = 1200 * 0.032; // ≈ 38.4px — equivalente visual real, sin el tope de pantalla
+        const nameLineHeight = nameFontSize * 1.18;
+        const regionRowHeight = 1200 * 0.054;   // min-height: 5.4cqw = 64.8px
+
+        const nameBaseline = dataTop + nameLineHeight * 0.8;
+        const regionBaseline = nameBaseline + rowGap + regionRowHeight / 2 + regionFontSize * 0.35;
+
         context.textAlign = "center";
         context.textBaseline = "middle";
         context.fillStyle = accent;
         let nameSize = 60;
         do {
-            context.font = `600 ${nameSize}px Fraunces, Georgia, serif`;
+            context.font = `700 ${nameSize}px "Roca One", "Fraunces", Georgia, serif`;
             if (context.measureText(cleanText(elements.name.value)).width <= 1060) break;
             nameSize -= 2;
         } while (nameSize > 40);
-        context.fillText(cleanText(elements.name.value), 600, 911);
+        context.fillText(cleanText(elements.name.value), 600, nameBaseline);
 
         if (role === "becario") {
             const prefix = "El talento nace en ";
             const region = `#${elements.region.value}`;
-            context.font = "300 38px \"Roca One\", \"Fraunces\", Georgia, serif";
+            context.font = `700 ${regionFontSize}px "Roca One", "Fraunces", Georgia, serif`;
             const prefixWidth = context.measureText(prefix).width;
-            context.font = "300 38px \"Roca One\", \"Fraunces\", Georgia, serif";
             const regionWidth = context.measureText(region).width;
             const regionStart = 600 - (prefixWidth + regionWidth) / 2;
             context.textAlign = "left";
             context.fillStyle = "#ffffff";
-            context.font = "300 38px \"Roca One\", \"Fraunces\", Georgia, serif";
-            context.fillText(prefix, regionStart, 990);
+            context.fillText(prefix, regionStart, regionBaseline);
             context.fillStyle = accent;
-            context.font = "300 38px \"Roca One\", \"Fraunces\", Georgia, serif";
-            context.fillText(region, regionStart + prefixWidth, 990);
+            context.fillText(region, regionStart + prefixWidth, regionBaseline);
         } else {
             context.textAlign = "center";
-            context.font = "300 24px \"Roca One\", \"Montserrat\", Arial, sans-serif";
+            context.font = "700 24px \"Roca One\", \"Montserrat\", Arial, sans-serif";
             const membershipWidth = 300;
             roundedRect(context, 600 - membershipWidth / 2, 962, membershipWidth, 56, 28);
             context.fillStyle = `${accent}12`;
@@ -568,6 +609,12 @@
     elements.name.addEventListener("input", updateTextPreview);
     elements.region.addEventListener("change", updateTextPreview);
     elements.roles.forEach(input => input.addEventListener("change", updateRolePreview));
+    elements.upload.addEventListener("click", () => {
+        if (state.photoFile) {
+            elements.photoInput.value = "";
+            setError("photo", "");
+        }
+    });
     elements.photoInput.addEventListener("change", event => loadPhoto(event.target.files[0]));
     elements.zoom.addEventListener("input", () => {
         state.zoom = Number(elements.zoom.value);

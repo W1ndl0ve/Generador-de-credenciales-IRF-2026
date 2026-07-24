@@ -55,6 +55,26 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: "Roca One";
+    src: url("font/RocaOne-Bold.woff2") format("woff2"),
+         url("font/RocaOne-Bold.woff") format("woff"),
+         url("font/RocaOne-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Roca One";
+    src: url("font/RocaOne-BdIt.woff2") format("woff2"),
+         url("font/RocaOne-BdIt.woff") format("woff"),
+         url("font/RocaOne-BdIt.ttf") format("truetype");
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
+}
+
 * { box-sizing: border-box; }
 
 html {
@@ -583,8 +603,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
     fill: var(--role-accent);
     font-family: "Roca One", "Fraunces", Georgia, serif;
     font-size: 38px;
-    font-weight: 300;
-    font-variation-settings: "SOFT" 100, "WONK" 1;
+    font-weight: 700;
     letter-spacing: .25px;
     text-shadow: 0 2px 10px rgba(0, 0, 0, .86), 0 0 12px color-mix(in srgb, var(--role-accent) 24%, transparent);
 }
@@ -665,8 +684,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
     color: var(--role-accent);
     font-family: "Roca One", "Fraunces", Georgia, serif;
     font-size: clamp(16px, 5cqw, 30px);
-    font-weight: 300;
-    font-variation-settings: "SOFT" 100, "WONK" 1;
+    font-weight: 700;
     letter-spacing: -.015em;
     line-height: 1.18;
     white-space: nowrap;
@@ -681,8 +699,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
     color: #fff;
     font-family: "Roca One", "Fraunces", Georgia, serif;
     font-size: clamp(9px, 3.2cqw, 20px);
-    font-weight: 300;
-    font-variation-settings: "SOFT" 100, "WONK" 1;
+    font-weight: 700;
 }
 
 .credential-data > p strong { color: var(--role-accent); font-weight: 600; }
@@ -690,7 +707,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
 .credential-region {
     gap: .22em;
     font-family: "Roca One", "Fraunces", Georgia, serif !important;
-    font-weight: 300 !important;
+    font-weight: 700 !important;
     transform: translateY(-1cqw);
 }
 
@@ -709,7 +726,7 @@ input[type="range"] { width: 100%; height: 4px; accent-color: var(--secondary); 
     box-shadow: 0 0 18px color-mix(in srgb, var(--role-accent) 13%, transparent);
     font-family: "Roca One", "Montserrat", Arial, sans-serif !important;
     font-size: clamp(7px, 1.85cqw, 11px) !important;
-    font-weight: 300 !important;
+    font-weight: 700 !important;
     line-height: 1;
     letter-spacing: .14em;
 }
